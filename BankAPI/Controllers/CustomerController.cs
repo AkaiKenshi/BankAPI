@@ -27,9 +27,12 @@ public class CustomerController : ApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<GetCustomerResponseDTO>> CreateCustomer(CreateCustomerRequestDTO request)
+    public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDTO request)
     {
-        return Ok(new());
+        var createCustomerRequest = await _customerService.CreateCustomerAsync(request);
+        return createCustomerRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 
     [HttpPut("UpdateCustomerInformation/{id}")]

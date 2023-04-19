@@ -32,15 +32,13 @@ public class CustomerService : ICustomerService
         _mapper = mapper;
     }
 
-    public Task<ErrorOr<GetCustomerResponseDTO>> CreateCustomerAsync(CreateCustomerRequestDTO createRequest)
+    public async Task<ErrorOr<GetCustomerResponseDTO>> CreateCustomerAsync(CreateCustomerRequestDTO createRequest)
     {
-        throw new NotImplementedException();
-    }
+        var newCustomer = _mapper.Map<Customer>(createRequest);
+        newCustomer.CustomerID = (customers.Max(c => int.Parse(c.CustomerID)) + 1).ToString();
+        customers.Add(newCustomer);
+        return _mapper.Map<GetCustomerResponseDTO>(newCustomer);     }
 
-    public Task<ErrorOr<Deleted>> DeleteCustomerAsync(string id)
-    {
-        throw new NotImplementedException();
-    }
 
     public async Task<ErrorOr<GetCustomerResponseDTO>> GetCustomerAsync(string id)
     {
@@ -49,12 +47,17 @@ public class CustomerService : ICustomerService
         return _mapper.Map<GetCustomerResponseDTO>(result);
     }
 
-    public async Task<ErrorOr<Updated>> UpdateCustomerEmailAsync(string id, UpdateCustomerEmailRequestDTO updateRequest)
+    public async Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest)
+    public async Task<ErrorOr<Updated>> UpdateCustomerUsernamAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ErrorOr<Updated>> UpdateCustomerEmailAsync(string id, UpdateCustomerEmailRequestDTO updateRequest)
     {
         throw new NotImplementedException();
     }
@@ -64,7 +67,7 @@ public class CustomerService : ICustomerService
         throw new NotImplementedException();
     }
 
-    public async Task<ErrorOr<Updated>> UpdateCustomerUsernamAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest)
+    public Task<ErrorOr<Deleted>> DeleteCustomerAsync(string id)
     {
         throw new NotImplementedException();
     }
