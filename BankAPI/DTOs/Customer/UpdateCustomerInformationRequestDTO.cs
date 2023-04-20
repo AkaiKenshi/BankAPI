@@ -2,6 +2,6 @@
 
 public record UpdateCustomerInformationRequestDTO
 (
-    string CustomerName,
+    string CustomerFirstName,
     string CustomerLastName
 );

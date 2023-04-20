@@ -26,7 +26,7 @@ public class Errors
             code: "Customer.idValidation",
             description: "a Customer with this id Already exists");
 
-        public static Error UsernameAlredyExists => Error.Validation(
+        public static Error UsernameAlreadyExists => Error.Validation(
             code: "Customer.UsernameValidation",
             description: "a Customer with this username already exists");
 

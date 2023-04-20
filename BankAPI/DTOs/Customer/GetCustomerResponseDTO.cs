@@ -4,7 +4,7 @@ public record GetCustomerResponseDTO
 (
     string CustomerID,
     string CustomerUsername,
-    string CustomerName,
+    string CustomerFirstName,
     string CustomerLastName,
     string CustomerEmail
 );

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BankAPI</name>
+    </assembly>
+    <members>
+        <member name="M:BankAPI.Controllers.CustomerController.GetCustomer(System.String)">
+            <summary>
+            This Service returns the customer for the given an Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.GetCustomerIdAvailable(System.String)">
+            <summary>
+            This Service checks if an Id is available
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.GetCustomerUsernameAvailable(System.String)">
+            <summary>
+            This Service checks if a Username is available
+            </summary>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.GetCustomerEmailAvailable(System.String)">
+            <summary>
+            This Service checks if a email is available
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.CreateCustomer(BankAPI.DTOs.Customer.CreateCustomerRequestDTO)">
+            <summary>
+            This Service creates a new customer
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerInformation(System.String,BankAPI.DTOs.Customer.UpdateCustomerInformationRequestDTO)">
+            <summary>
+            This Service updates an existing customer's first and last name
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerUsername(System.String,BankAPI.DTOs.Customer.UpdateCustomerUsernameRequestDTO)">
+            <summary>
+            This Service updates an exiting customer's username
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerEmail(System.String,BankAPI.DTOs.Customer.UpdateCustomerEmailRequestDTO)">
+            <summary>
+            This Service updates an existing customer's Email
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerId(System.String,BankAPI.DTOs.Customer.UpdateCustomerIdRequestDTO)">
+            <summary>
+            This Service updates an existing customer's id
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerPassword(System.String,BankAPI.DTOs.Customer.UpdateCustomerPasswordRequestDTO)">
+            <summary>
+            This Service updates an existing customer's password
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.DeleteCustomer(System.String)">
+            <summary>
+            This Service deletes an existing customer
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

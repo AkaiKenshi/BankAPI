@@ -8,11 +8,11 @@ namespace BankAPI.Services;
 
 public class CustomerService : ICustomerService
 {
-    private List<Customer> customers = new List<Customer>(){
+    private static List<Customer> customers = new List<Customer>(){
         new Customer{
             CustomerId = "1721489985",
             CustomerUsername = "JIATN",
-            CustomerName = "Jose",
+            CustomerFirstName = "Jose",
             CustomerLastName = "Alvarez Torres Naranjo",
             CustomerEmail = "jiatn@live.com",
             CustomerPassword = "1q2w3e4r5t"
@@ -20,7 +20,7 @@ public class CustomerService : ICustomerService
         new Customer{
             CustomerId = "1721489993",
             CustomerUsername = "JSATN",
-            CustomerName = "Juan",
+            CustomerFirstName = "Juan",
             CustomerLastName = "Alvarez Torres Naranjo",
             CustomerEmail = "jsatn@live.com",
             CustomerPassword = "1a2s3d4f5g"
@@ -37,8 +37,8 @@ public class CustomerService : ICustomerService
         var newCustomer = _mapper.Map<Customer>(createRequest);
         
         if (customers.Any(c => c.CustomerId.Equals(newCustomer.CustomerId))) { return Errors.Customer.IdAlreadyExists; }
-        else if (customers.Any(c => c.CustomerUsername.Equals(newCustomer.CustomerUsername))) { return Errors.Customer.UsernameAlredyExists; }
-        else if (customers.Any(c => c.CustomerEmail.Equals(createRequest.CustomerEmail))) { return Errors.Customer.EmailAlreadyExists;  }
+        else if (customers.Any(c => c.CustomerUsername.Equals(newCustomer.CustomerUsername))) { return Errors.Customer.UsernameAlreadyExists; }
+        else if (customers.Any(c => c.CustomerEmail.Equals(createRequest.CustomerEmail))) { return Errors.Customer.EmailAlreadyExists; }
 
         customers.Add(newCustomer);
         return _mapper.Map<GetCustomerResponseDTO>(newCustomer);
@@ -52,21 +52,36 @@ public class CustomerService : ICustomerService
         return _mapper.Map<GetCustomerResponseDTO>(customer);
     }
 
+    public async Task<ErrorOr<bool>> GetIdAvailable(string id)
+    {
+        return !customers.Any(c => c.CustomerId == id);
+    }
+
+    public async Task<ErrorOr<bool>> GetUsernameAvailable(string username)
+    {
+        return !customers.Any(c => c.CustomerUsername == username);
+    }
+
+    public async Task<ErrorOr<bool>> GetEmailAvailable(string email)
+    {
+        return !customers.Any(c => c.CustomerEmail == email);
+    }
+
     public async Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest)
     {
-        var customer = customers.FirstOrDefault(c => c.CustomerId.Equals(id));
+        var customer = customers.FirstOrDefault(c => c.CustomerId == id);
         if (customer == null) { return Errors.Customer.NotFound; }
         customer.CustomerLastName = updateRequest.CustomerLastName;
-        customer.CustomerUsername = updateRequest.CustomerName;
+        customer.CustomerUsername = updateRequest.CustomerFirstName;
         return Result.Updated;
     }
 
-    public async Task<ErrorOr<Updated>> UpdateCustomerUsernamAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest)
+    public async Task<ErrorOr<Updated>> UpdateCustomerUsernameAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest)
     {
-        var customer = customers.FirstOrDefault(c => c.CustomerId.Equals(id));
+        var customer = customers.FirstOrDefault(c => c.CustomerId == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
-        else if (customers.Any(c => c.CustomerUsername.Equals(updateRequest.CustomerUsername))) { return Errors.Customer.UsernameAlredyExists; }
+        else if (customers.Any(c => c.CustomerUsername.Equals(updateRequest.CustomerUsername))) { return Errors.Customer.UsernameAlreadyExists; }
 
         customer.CustomerUsername = updateRequest.CustomerUsername;
         return Result.Updated;
@@ -74,11 +89,11 @@ public class CustomerService : ICustomerService
 
     public async Task<ErrorOr<Updated>> UpdateCustomerEmailAsync(string id, UpdateCustomerEmailRequestDTO updateRequest)
     {
-        var customer = customers.FirstOrDefault(c => c.CustomerId.Equals(id));
+        var customer = customers.FirstOrDefault(c => c.CustomerId == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
         else if (customers.Any(c => c.CustomerEmail.Equals(updateRequest.CustomerEmail))) { return Errors.Customer.EmailAlreadyExists; }
-        else if (customer.CustomerPassword.Equals(updateRequest.CustomerPassword)) { return Errors.Customer.InvalidPassword; }
+        else if (!customer.CustomerPassword.Equals(updateRequest.CustomerPassword)) { return Errors.Customer.InvalidPassword; }
 
         customer.CustomerEmail = updateRequest.CustomerEmail;
         return Result.Updated;
@@ -86,11 +101,11 @@ public class CustomerService : ICustomerService
 
     public async Task<ErrorOr<Updated>> UpdateCustomerIdAsync(string id, UpdateCustomerIdRequestDTO updateRequest)
     {
-        var customer = customers.FirstOrDefault(c => c.CustomerId.Equals(id));
+        var customer = customers.FirstOrDefault(c => c.CustomerId == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
         else if (customers.Any(c => c.CustomerId.Equals(updateRequest.CustomerId))) { return Errors.Customer.IdAlreadyExists; }
-        else if (customer.CustomerPassword.Equals(updateRequest.CustomerPassword)) { return Errors.Customer.InvalidPassword; }
+        else if (!customer.CustomerPassword.Equals(updateRequest.CustomerPassword)) { return Errors.Customer.InvalidPassword; }
 
         customer.CustomerId = updateRequest.CustomerId;
         return Result.Updated;
@@ -98,10 +113,10 @@ public class CustomerService : ICustomerService
 
     public async Task<ErrorOr<Updated>> UpdateCustomerPasswordAsync(string id, UpdateCustomerPasswordRequestDTO updateRequest)
     {
-        var customer = customers.FirstOrDefault(c => c.CustomerId.Equals(id));
+        var customer = customers.FirstOrDefault(c => c.CustomerId == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
-        else if (customer.CustomerPassword.Equals(updateRequest.CustomerOldPassword)) { return  Errors.Customer.InvalidPassword; }
+        else if (!customer.CustomerPassword.Equals(updateRequest.CustomerOldPassword)) { return  Errors.Customer.InvalidPassword; }
         
         customer.CustomerPassword = updateRequest.CustomerNewPassword;
         return Result.Updated;
