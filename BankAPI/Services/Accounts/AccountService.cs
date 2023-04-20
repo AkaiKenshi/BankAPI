@@ -2,8 +2,8 @@
 using BankAPI.DTOs.Account;
 using BankAPI.Model;
 using BankAPI.ServiceErrors;
+using BankAPI.Services.Customers;
 using ErrorOr;
-using System.Diagnostics.CodeAnalysis;
 
 namespace BankAPI.Services.Accounts;
 
@@ -16,7 +16,7 @@ public class AccountService : IAccountService
             AccountId = "0000000001",
             AccountBalance = 100,
             AccountTypeId = AccountType.Checking,
-            AccountOwner = "1721489985",
+            AccountOwnerId = "1721489985",
             AccountCraetedDate = new DateOnly(2023,4,20)
         },
         new Account
@@ -24,7 +24,7 @@ public class AccountService : IAccountService
             AccountId = "0000000002",
             AccountBalance = 300,
             AccountTypeId = AccountType.Checking,
-            AccountOwner = "1721489993",
+            AccountOwnerId = "1721489993",
             AccountCraetedDate = new DateOnly(2023,4,20)
         }
     };
@@ -37,7 +37,8 @@ public class AccountService : IAccountService
     public async Task<ErrorOr<GetAccountResponse>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);
-        newAccount.AccountId = (accounts.Max(c => int.Parse(c.AccountId)) + 1).ToString("D10");
+        if(CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
+        newAccount.AccountId = (accounts.Max(a => int.Parse(a.AccountId)) + 1).ToString("D10");
         newAccount.AccountTypeId = AccountType.Checking;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
@@ -47,7 +48,8 @@ public class AccountService : IAccountService
     public async Task<ErrorOr<GetAccountResponse>> CreateFixedTermInvestmentAccountAsync(CreateFixedTermInvestmentAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);
-        newAccount.AccountId = (accounts.Max(c => int.Parse(c.AccountId)) + 1).ToString("D10");
+        if (CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
+        newAccount.AccountId = (accounts.Max(a => int.Parse(a.AccountId)) + 1).ToString("D10");
         newAccount.AccountTypeId = AccountType.Savings;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
@@ -57,7 +59,8 @@ public class AccountService : IAccountService
     public async Task<ErrorOr<GetAccountResponse>> CreateSavingsAccountAsync(CreateSavingsAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);
-        newAccount.AccountId = (accounts.Max(c => int.Parse(c.AccountId)) + 1).ToString("D10");
+        if (CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
+        newAccount.AccountId = (accounts.Max(a => int.Parse(a.AccountId)) + 1).ToString("D10");
         newAccount.AccountTypeId = AccountType.Savings;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
@@ -66,14 +69,21 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<GetAccountResponse>> GetAccountAsync(string accountId)
     {
-        var account = accounts.FirstOrDefault(c => c.AccountId == accountId);
+        var account = accounts.FirstOrDefault(a => a.AccountId == accountId);
         if (account == null) { return Errors.Account.NotFound; }
         return _mapper.Map<GetAccountResponse>(account);
     }
 
+    public async Task<ErrorOr<List<GetAccountResponse>>> GetListOfAccountsFromOwner(string accountOwnerId)
+    {
+        var accountList = accounts.Where(a => a.AccountOwnerId == accountOwnerId).ToList();
+        if(accountList == null || accountList.Count == 0) {  return Errors.Account.NotFound; }
+        return accountList.Select(c => _mapper.Map<GetAccountResponse>(c)).ToList(); 
+    }
+
     public async Task<ErrorOr<Updated>> UpdateDepositBalanceAsync(UpdateDepositBalanceRequestDTO request)
     {
-        var account = accounts.FirstOrDefault(c => c.AccountId == request.AccountId);
+        var account = accounts.FirstOrDefault(a => a.AccountId == request.AccountId);
 
         if (account == null) { return Errors.Account.NotFound; }
         else if (account.AccountTypeId == AccountType.FixedTermInvestment) { return Errors.Account.InvalidAction; }
@@ -85,8 +95,8 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<Updated>> UpdateTransferBalanceAsync(UpdateTransferBalanceRequestDTO request)
     {
-        var account = accounts.FirstOrDefault(c => c.AccountId == request.AccountId);
-        var targetAccount = accounts.FirstOrDefault(c => c.AccountId == request.TargetAccountId);
+        var account = accounts.FirstOrDefault(a => a.AccountId == request.AccountId);
+        var targetAccount = accounts.FirstOrDefault(a => a.AccountId == request.TargetAccountId);
         if (account == null || targetAccount == null) { return Errors.Account.NotFound; }
         else if (account.AccountTypeId == AccountType.FixedTermInvestment ||
             targetAccount.AccountTypeId == AccountType.FixedTermInvestment) { return Errors.Account.InvalidAction; }
@@ -101,7 +111,7 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<Updated>> UpdateWithdrawBalanceAsync(UpdateWithdrawBalanceRequestDTO request)
     {
-        var account = accounts.FirstOrDefault(c => c.AccountId == request.AccountId);
+        var account = accounts.FirstOrDefault(a => a.AccountId == request.AccountId);
         if (account == null) { return Errors.Account.NotFound; }
         else if (account.AccountTypeId == AccountType.FixedTermInvestment) { return Errors.Account.InvalidAction; }
         else if (request.WithdawAmount < 0) { return Errors.Account.AmountValidation; }
@@ -112,8 +122,7 @@ public class AccountService : IAccountService
     }
     public async Task<ErrorOr<Deleted>> DeleteAccountAsync(string accountId)
     {
-        var accountIndex = accounts.FindIndex(c => c.AccountId == accountId);
-        
+        var accountIndex = accounts.FindIndex(a => a.AccountId == accountId);
         if (accountIndex == -1) {  return Errors.Account.NotFound; }
         accounts.RemoveAt(accountIndex);
         

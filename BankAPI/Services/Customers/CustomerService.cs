@@ -3,6 +3,7 @@ using BankAPI.DTOs.Customer;
 using BankAPI.Model;
 using BankAPI.ServiceErrors;
 using ErrorOr;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BankAPI.Services.Customers;
 
@@ -137,4 +138,7 @@ public class CustomerService : ICustomerService
         customers.RemoveAt(index);
         return Result.Deleted;
     }
+
+    public static bool FindIfUserExists(string id) => customers.Any(c => c.CustomerId == id);
+    
 }
