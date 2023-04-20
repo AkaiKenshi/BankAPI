@@ -2,7 +2,7 @@
 
 namespace BankAPI.ServiceErrors;
 
-public class Errors
+public partial class Errors
 {
     public class Customer
     {

@@ -1,11 +1,10 @@
 ﻿using BankAPI.DTOs.Customer;
-using BankAPI.Services;
+using BankAPI.Services.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
 namespace BankAPI.Controllers;
 
-[Route("api/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [Consumes(MediaTypeNames.Application.Json)]
 public class CustomerController : ApiController
@@ -18,7 +17,7 @@ public class CustomerController : ApiController
     }
 
     /// <summary>
-    /// This Service returns the customer for the given an Id
+    /// This Service returns the customer for the given Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -32,6 +31,22 @@ public class CustomerController : ApiController
             customer => Ok(customer),
             errors => Problem(errors)
             );
+    }
+
+    /// <summary>
+    /// This Service returns the customer for the given username
+    /// </summary>
+    /// <param name="username"></param>
+    /// <returns></returns>
+    [HttpGet("GetCustomerByUsername/{username}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCustomerByUsername(string username)
+    {
+        var getCustomerByUsername = await _customerService.GetCustomerByUsernameAsync(username);
+        return getCustomerByUsername.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -93,7 +108,7 @@ public class CustomerController : ApiController
         return createCustomerRequest.Match(
             customer => CreatedAtAction(
                 actionName: nameof(GetCustomer),
-                routeValues: new { id = request.customerId },
+                routeValues: new { id = request.CustomerId },
                 value: customer),
             errors => Problem(errors));
     }

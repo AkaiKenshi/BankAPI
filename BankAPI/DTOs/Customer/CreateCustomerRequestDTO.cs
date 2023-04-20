@@ -2,7 +2,7 @@
 
 public record CreateCustomerRequestDTO
 (
-    string customerId,
+    string CustomerId,
     string CustomerUsername,
     string CustomerFirtsName,
     string CustomerLastName,

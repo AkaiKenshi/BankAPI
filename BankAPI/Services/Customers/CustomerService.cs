@@ -4,11 +4,11 @@ using BankAPI.Model;
 using BankAPI.ServiceErrors;
 using ErrorOr;
 
-namespace BankAPI.Services;
+namespace BankAPI.Services.Customers;
 
 public class CustomerService : ICustomerService
 {
-    private static List<Customer> customers = new List<Customer>(){
+    private static readonly List<Customer> customers = new(){
         new Customer{
             CustomerId = "1721489985",
             CustomerUsername = "JIATN",
@@ -35,7 +35,7 @@ public class CustomerService : ICustomerService
     public async Task<ErrorOr<GetCustomerResponseDTO>> CreateCustomerAsync(CreateCustomerRequestDTO createRequest)
     {
         var newCustomer = _mapper.Map<Customer>(createRequest);
-        
+
         if (customers.Any(c => c.CustomerId.Equals(newCustomer.CustomerId))) { return Errors.Customer.IdAlreadyExists; }
         else if (customers.Any(c => c.CustomerUsername.Equals(newCustomer.CustomerUsername))) { return Errors.Customer.UsernameAlreadyExists; }
         else if (customers.Any(c => c.CustomerEmail.Equals(createRequest.CustomerEmail))) { return Errors.Customer.EmailAlreadyExists; }
@@ -44,10 +44,16 @@ public class CustomerService : ICustomerService
         return _mapper.Map<GetCustomerResponseDTO>(newCustomer);
     }
 
-
     public async Task<ErrorOr<GetCustomerResponseDTO>> GetCustomerAsync(string id)
     {
         var customer = customers.FirstOrDefault(c => c.CustomerId == id);
+        if (customer == null) { return Errors.Customer.NotFound; }
+        return _mapper.Map<GetCustomerResponseDTO>(customer);
+    }
+
+    public async Task<ErrorOr<GetCustomerResponseDTO>> GetCustomerByUsernameAsync(string username)
+    {
+        var customer = customers.FirstOrDefault(c => c.CustomerUsername == username);
         if (customer == null) { return Errors.Customer.NotFound; }
         return _mapper.Map<GetCustomerResponseDTO>(customer);
     }
@@ -116,17 +122,17 @@ public class CustomerService : ICustomerService
         var customer = customers.FirstOrDefault(c => c.CustomerId == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
-        else if (!customer.CustomerPassword.Equals(updateRequest.CustomerOldPassword)) { return  Errors.Customer.InvalidPassword; }
-        
+        else if (!customer.CustomerPassword.Equals(updateRequest.CustomerOldPassword)) { return Errors.Customer.InvalidPassword; }
+
         customer.CustomerPassword = updateRequest.CustomerNewPassword;
         return Result.Updated;
     }
 
     public async Task<ErrorOr<Deleted>> DeleteCustomerAsync(string id)
     {
-        int index =  customers.FindIndex(c => c.CustomerId.Equals(id));
-        
-        if (index == -1) {  return Errors.Customer.NotFound; }
+        int index = customers.FindIndex(c => c.CustomerId.Equals(id));
+
+        if (index == -1) { return Errors.Customer.NotFound; }
 
         customers.RemoveAt(index);
         return Result.Deleted;

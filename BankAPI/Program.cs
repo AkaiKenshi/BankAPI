@@ -1,4 +1,4 @@
-using BankAPI.Services;
+using BankAPI.Services.Customers;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 

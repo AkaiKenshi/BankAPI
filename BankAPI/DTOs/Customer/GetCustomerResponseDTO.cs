@@ -2,7 +2,7 @@
 
 public record GetCustomerResponseDTO
 (
-    string CustomerID,
+    string CustomerId,
     string CustomerUsername,
     string CustomerFirstName,
     string CustomerLastName,

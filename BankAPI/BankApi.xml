@@ -6,9 +6,16 @@
     <members>
         <member name="M:BankAPI.Controllers.CustomerController.GetCustomer(System.String)">
             <summary>
-            This Service returns the customer for the given an Id
+            This Service returns the customer for the given Id
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.GetCustomerByUsername(System.String)">
+            <summary>
+            This Service returns the customer for the given username
+            </summary>
+            <param name="username"></param>
             <returns></returns>
         </member>
         <member name="M:BankAPI.Controllers.CustomerController.GetCustomerIdAvailable(System.String)">
