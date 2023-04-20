@@ -4,6 +4,62 @@
         <name>BankAPI</name>
     </assembly>
     <members>
+        <member name="M:BankAPI.Controllers.AccountController.GetAccount(System.String)">
+            <summary>
+            This service returns the account from the given id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.GetAllAccountsFromCustomer(System.String)">
+            <summary>
+            This Services returns the all the accounts form the 
+            </summary>
+            <param name="CustomerId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.CreateCheckingAccount(BankAPI.DTOs.Account.CreateCheckingAccountRequestDTO)">
+            <summary>
+            This Service creates a new checking account 
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.CreateSavingsAccount(BankAPI.DTOs.Account.CreateSavingsAccountRequestDTO)">
+            <summary>
+            This Service creates a new savings account 
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.CreateFixedTermInvestmentAccount(BankAPI.DTOs.Account.CreateFixedTermInvestmentAccountRequestDTO)">
+            <summary>
+            This Service creates a new fixed term investment account 
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.UpdateWithdrawBalance(BankAPI.DTOs.Account.UpdateWithdrawBalanceRequestDTO)">
+            <summary>
+            This service is used to withdraw money from a an account
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.UpdateDepositBalance(BankAPI.DTOs.Account.UpdateDepositBalanceRequestDTO)">
+            <summary>
+            This service is used to deposit money from a an account
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.UpdateTransferBalance(BankAPI.DTOs.Account.UpdateTransferBalanceRequestDTO)">
+            <summary>
+            This service is used to transfer money from a an account
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:BankAPI.Controllers.CustomerController.GetCustomer(System.String)">
             <summary>
             This Service returns the customer for the given Id

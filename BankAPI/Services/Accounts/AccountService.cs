@@ -50,7 +50,7 @@ public class AccountService : IAccountService
         var newAccount = _mapper.Map<Account>(request);
         if (CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
         newAccount.AccountId = (accounts.Max(a => int.Parse(a.AccountId)) + 1).ToString("D10");
-        newAccount.AccountTypeId = AccountType.Savings;
+        newAccount.AccountTypeId = AccountType.FixedTermInvestment;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
         return _mapper.Map<GetAccountResponse>(newAccount);
@@ -74,7 +74,7 @@ public class AccountService : IAccountService
         return _mapper.Map<GetAccountResponse>(account);
     }
 
-    public async Task<ErrorOr<List<GetAccountResponse>>> GetListOfAccountsFromOwner(string accountOwnerId)
+    public async Task<ErrorOr<List<GetAccountResponse>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId)
     {
         var accountList = accounts.Where(a => a.AccountOwnerId == accountOwnerId).ToList();
         if(accountList == null || accountList.Count == 0) {  return Errors.Account.NotFound; }
