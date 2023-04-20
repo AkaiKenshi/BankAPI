@@ -34,6 +34,7 @@ public class AccountService : IAccountService
     {
         _mapper = mapper;
     }
+    
     public async Task<ErrorOr<GetAccountResponse>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);

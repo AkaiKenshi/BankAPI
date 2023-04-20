@@ -111,6 +111,9 @@ namespace BankAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("UpdateWithdrawBalance")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateWithdrawBalance(UpdateWithdrawBalanceRequestDTO request)
         {
             var updateWithdraw = await _accountService.UpdateWithdrawBalanceAsync(request);
@@ -125,6 +128,9 @@ namespace BankAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("UpdateDepositBalance")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateDepositBalance(UpdateDepositBalanceRequestDTO request)
         {
             var updateDeposit = await _accountService.UpdateDepositBalanceAsync(request);
@@ -139,6 +145,9 @@ namespace BankAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("UpdateTransferBalance")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateTransferBalance(UpdateTransferBalanceRequestDTO request)
         {
             var updateTransfer = await _accountService.UpdateTransferBalanceAsync(request);
@@ -152,6 +161,9 @@ namespace BankAPI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteAccount(string id)
         {
             var deleteAccount = await _accountService.DeleteAccountAsync(id);
