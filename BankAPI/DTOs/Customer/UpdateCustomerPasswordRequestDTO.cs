@@ -1,7 +1,7 @@
 ﻿namespace BankAPI.DTOs.Customer;
 
 public record UpdateCustomerPasswordRequestDTO(
-    string OldPassword,
-    string Password
+    string CustomerOldPassword,
+    string CustomerNewPassword
     );
 

@@ -2,4 +2,4 @@
 
 public record UpdateCustomerEmailRequestDTO(
     string CustomerEmail,
-    string password);
+    string CustomerPassword);

@@ -9,7 +9,7 @@ namespace BankAPI.Controllers;
 [Route("api/[controller]")]
 public class CustomerController : ApiController
 {
-    private ICustomerService _customerService;
+    private readonly ICustomerService _customerService;
 
     public CustomerController(ICustomerService customerService)
     {
@@ -36,32 +36,56 @@ public class CustomerController : ApiController
     }
 
     [HttpPut("UpdateCustomerInformation/{id}")]
-    public async Task<ActionResult> UpdateCustomerInformation(string id, UpdateCustomerInformationRequestDTO request) 
+    public async Task<IActionResult> UpdateCustomerInformation(string id, UpdateCustomerInformationRequestDTO request) 
     {
-        return Ok(new());
+        var updateInformationRequest = await _customerService.UpdateCustomerInformationAsync(id, request);
+        return updateInformationRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 
     [HttpPut("UpdateCustomerUsername/{id}")]
-    public async Task<ActionResult> UpdateCustomerInformation(string id, UpdateCustomerUsernameRequestDTO requst)
+    public async Task<IActionResult> UpdateCustomerUsername(string id, UpdateCustomerUsernameRequestDTO request)
     {
-        return Ok(new());
+        var updateUsernameRequest = await _customerService.UpdateCustomerUsernamAsync(id, request);
+        return updateUsernameRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 
     [HttpPut("UpdateCustomerEmail/{id}")]
-    public async Task<ActionResult> UpdateCustomerEmail(string id, UpdateCustomerEmailRequestDTO requst)
+    public async Task<IActionResult> UpdateCustomerEmail(string id, UpdateCustomerEmailRequestDTO request)
     {
-        return Ok(new());
+        var updateEmailRequest = await _customerService.UpdateCustomerEmailAsync(id, request);
+        return updateEmailRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
+    }
+
+    [HttpPut("UpdateCustomerId/{id}")]
+    public async Task<IActionResult> UpdateCustomerId(string id, UpdateCustomerIdRequestDTO request)
+    {
+        var updateIdRequest = await _customerService.UpdateCustomerIdAsync(id, request);
+        return updateIdRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 
     [HttpPut("updateCustomerPassword/{id}")]
-    public async Task<ActionResult> UpdateCustomerPassword(string id, UpdateCustomerPasswordRequestDTO request) 
+    public async Task<IActionResult> UpdateCustomerPassword(string id, UpdateCustomerPasswordRequestDTO request) 
     {
-        return Ok(new());
+        var updatePasswordRequest = await _customerService.UpdateCustomerPasswordAsync(id, request);
+        return updatePasswordRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteCustomer(string id)
+    public async Task<IActionResult> DeleteCustomer(string id)
     {
-        return Ok();
+        var deleteCustomerRequest = await _customerService.DeleteCustomerAsync(id);
+        return deleteCustomerRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
     }
 }

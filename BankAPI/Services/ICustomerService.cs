@@ -11,6 +11,7 @@ public interface ICustomerService
     Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest); 
     Task<ErrorOr<Updated>> UpdateCustomerUsernamAsync(string id,  UpdateCustomerUsernameRequestDTO updateRequest);
     Task<ErrorOr<Updated>> UpdateCustomerEmailAsync(string id, UpdateCustomerEmailRequestDTO updateRequest);
-    Task<ErrorOr<Updated>> UpdateCustomerPassword(string id, UpdateCustomerPasswordRequestDTO updateRequest);
+    Task<ErrorOr<Updated>> UpdateCustomerIdAsync(string id, UpdateCustomerIdRequestDTO updateRequest);
+    Task<ErrorOr<Updated>> UpdateCustomerPasswordAsync(string id, UpdateCustomerPasswordRequestDTO updateRequest);
     Task<ErrorOr<Deleted>> DeleteCustomerAsync(string id);
 }
