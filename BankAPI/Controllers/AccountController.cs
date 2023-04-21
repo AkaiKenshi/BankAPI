@@ -40,9 +40,9 @@ namespace BankAPI.Controllers
         [HttpGet("getAllAccountsFromCustomer/{customerId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAllAccountsFromCustomer(string CustomerId)
+        public async Task<IActionResult> GetAllAccountsFromCustomer(string customerId)
         {
-            var getAllAccounts = await _accountService.GetListOfAccountsFromOwnerAsync(CustomerId);
+            var getAllAccounts = await _accountService.GetListOfAccountsFromOwnerAsync(customerId);
             return getAllAccounts.Match(
                 allAccounts => Ok(allAccounts),
                 errors => Problem(errors));
@@ -52,7 +52,7 @@ namespace BankAPI.Controllers
         /// This Service creates a new checking account 
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns> </returns>
         [HttpPost("createCheckingAccount")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

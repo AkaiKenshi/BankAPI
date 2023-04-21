@@ -1,3 +1,4 @@
+using BankAPI.Services.Accounts;
 using BankAPI.Services.Customers;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -22,6 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
     });
 
     builder.Services.AddScoped<ICustomerService, CustomerService>();
+    builder.Services.AddScoped<IAccountService, AccountService>();
 }
 var app = builder.Build();
 {

@@ -2,10 +2,10 @@
 
 namespace BankAPI.DTOs.Account;
 
-public record GetAccountResponse(
+public record GetAccountResponseDTO(
     string AccountId,
     double AccountBalance,
     AccountType AccountTypeId,
-    string AccountOwner,
-    DateOnly AccountCreatedDate,
+    string AccountOwnerId,
+    DateOnly AccountCraetedDate,
     int? AccountTerm);

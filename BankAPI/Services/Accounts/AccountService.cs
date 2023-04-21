@@ -35,7 +35,7 @@ public class AccountService : IAccountService
         _mapper = mapper;
     }
     
-    public async Task<ErrorOr<GetAccountResponse>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request)
+    public async Task<ErrorOr<GetAccountResponseDTO>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);
         if(CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
@@ -43,10 +43,10 @@ public class AccountService : IAccountService
         newAccount.AccountTypeId = AccountType.Checking;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
-        return _mapper.Map<GetAccountResponse>(newAccount);
+        return _mapper.Map<GetAccountResponseDTO>(newAccount);
     }
 
-    public async Task<ErrorOr<GetAccountResponse>> CreateFixedTermInvestmentAccountAsync(CreateFixedTermInvestmentAccountRequestDTO request)
+    public async Task<ErrorOr<GetAccountResponseDTO>> CreateFixedTermInvestmentAccountAsync(CreateFixedTermInvestmentAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);
         if (CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
@@ -54,10 +54,10 @@ public class AccountService : IAccountService
         newAccount.AccountTypeId = AccountType.FixedTermInvestment;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
-        return _mapper.Map<GetAccountResponse>(newAccount);
+        return _mapper.Map<GetAccountResponseDTO>(newAccount);
     }
 
-    public async Task<ErrorOr<GetAccountResponse>> CreateSavingsAccountAsync(CreateSavingsAccountRequestDTO request)
+    public async Task<ErrorOr<GetAccountResponseDTO>> CreateSavingsAccountAsync(CreateSavingsAccountRequestDTO request)
     {
         var newAccount = _mapper.Map<Account>(request);
         if (CustomerService.FindIfUserExists(request.AccountOwner)) { return Errors.Customer.NotFound; }
@@ -65,21 +65,21 @@ public class AccountService : IAccountService
         newAccount.AccountTypeId = AccountType.Savings;
         newAccount.AccountCraetedDate = DateOnly.FromDateTime(DateTime.Now);
 
-        return _mapper.Map<GetAccountResponse>(newAccount);
+        return _mapper.Map<GetAccountResponseDTO>(newAccount);
     }
 
-    public async Task<ErrorOr<GetAccountResponse>> GetAccountAsync(string accountId)
+    public async Task<ErrorOr<GetAccountResponseDTO>> GetAccountAsync(string accountId)
     {
         var account = accounts.FirstOrDefault(a => a.AccountId == accountId);
         if (account == null) { return Errors.Account.NotFound; }
-        return _mapper.Map<GetAccountResponse>(account);
+        return _mapper.Map<GetAccountResponseDTO>(account);
     }
 
-    public async Task<ErrorOr<List<GetAccountResponse>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId)
+    public async Task<ErrorOr<List<GetAccountResponseDTO>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId)
     {
         var accountList = accounts.Where(a => a.AccountOwnerId == accountOwnerId).ToList();
         if(accountList == null || accountList.Count == 0) {  return Errors.Account.NotFound; }
-        return accountList.Select(c => _mapper.Map<GetAccountResponse>(c)).ToList(); 
+        return accountList.Select(c => _mapper.Map<GetAccountResponseDTO>(c)).ToList(); 
     }
 
     public async Task<ErrorOr<Updated>> UpdateDepositBalanceAsync(UpdateDepositBalanceRequestDTO request)

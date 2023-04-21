@@ -7,5 +7,5 @@ public class Account
     public AccountType AccountTypeId { get; set; }
     public string AccountOwnerId { get; set; } = string.Empty;
     public DateOnly AccountCraetedDate { get; set; }
-    public int? AccouuntTerm { get; set; } 
+    public int? AccountTerm { get; set; } 
 }

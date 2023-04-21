@@ -5,11 +5,11 @@ namespace BankAPI.Services.Accounts;
 
 public interface IAccountService
 {
-    Task<ErrorOr<GetAccountResponse>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request);
-    Task<ErrorOr<GetAccountResponse>> CreateSavingsAccountAsync(CreateSavingsAccountRequestDTO request);
-    Task<ErrorOr<GetAccountResponse>> CreateFixedTermInvestmentAccountAsync(CreateFixedTermInvestmentAccountRequestDTO request);
-    Task<ErrorOr<GetAccountResponse>> GetAccountAsync(string  accountId);
-    Task<ErrorOr<List<GetAccountResponse>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId);
+    Task<ErrorOr<GetAccountResponseDTO>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request);
+    Task<ErrorOr<GetAccountResponseDTO>> CreateSavingsAccountAsync(CreateSavingsAccountRequestDTO request);
+    Task<ErrorOr<GetAccountResponseDTO>> CreateFixedTermInvestmentAccountAsync(CreateFixedTermInvestmentAccountRequestDTO request);
+    Task<ErrorOr<GetAccountResponseDTO>> GetAccountAsync(string  accountId);
+    Task<ErrorOr<List<GetAccountResponseDTO>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId);
     Task<ErrorOr<Updated>> UpdateDepositBalanceAsync(UpdateDepositBalanceRequestDTO request);
     Task<ErrorOr<Updated>> UpdateWithdrawBalanceAsync(UpdateWithdrawBalanceRequestDTO request);
     Task<ErrorOr<Updated>> UpdateTransferBalanceAsync(UpdateTransferBalanceRequestDTO request);

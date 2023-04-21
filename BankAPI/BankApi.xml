@@ -41,23 +41,30 @@
         </member>
         <member name="M:BankAPI.Controllers.AccountController.UpdateWithdrawBalance(BankAPI.DTOs.Account.UpdateWithdrawBalanceRequestDTO)">
             <summary>
-            This service is used to withdraw money from a an account
+            This Service is used to withdraw money from a an account
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:BankAPI.Controllers.AccountController.UpdateDepositBalance(BankAPI.DTOs.Account.UpdateDepositBalanceRequestDTO)">
             <summary>
-            This service is used to deposit money from a an account
+            This Service is used to deposit money from a an account
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:BankAPI.Controllers.AccountController.UpdateTransferBalance(BankAPI.DTOs.Account.UpdateTransferBalanceRequestDTO)">
             <summary>
-            This service is used to transfer money from a an account
+            This Service is used to transfer money from a an account
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.AccountController.DeleteAccount(System.String)">
+            <summary>
+            This Service is used to delete an account 
+            </summary>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:BankAPI.Controllers.CustomerController.GetCustomer(System.String)">

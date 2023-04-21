@@ -13,6 +13,6 @@ public class AutoMapperProfile : Profile
         CreateMap<CreateCheckingAccountRequestDTO, Account>();
         CreateMap<CreateSavingsAccountRequestDTO, Account>();
         CreateMap<CreateFixedTermInvestmentAccountRequestDTO, Account>();
-        CreateMap<Account, GetAccountResponse>();
+        CreateMap<Account, GetAccountResponseDTO>();
     }
 }
