@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>BankApi.xml</DocumentationFile>
+    <UserSecretsId>666f960f-f30f-4f51-96d1-7139519d3f57</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,6 +22,10 @@
     <PackageReference Include="ErrorOr" Version="1.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankApi.Data\BankApi.Data.csproj" />
   </ItemGroup>
 
 </Project>

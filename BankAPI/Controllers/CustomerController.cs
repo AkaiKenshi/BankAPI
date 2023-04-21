@@ -108,7 +108,7 @@ public class CustomerController : ApiController
         return createCustomerRequest.Match(
             customer => CreatedAtAction(
                 actionName: nameof(GetCustomer),
-                routeValues: new { id = request.CustomerId },
+                routeValues: new { id = request.Id },
                 value: customer),
             errors => Problem(errors));
     }

@@ -1,5 +1,4 @@
 ﻿using BankAPI.DTOs.Customer;
-using BankAPI.Model;
 using ErrorOr;
 
 namespace BankAPI.Services.Customers;

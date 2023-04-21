@@ -62,7 +62,7 @@ namespace BankAPI.Controllers
             return createCheckingAccount.Match(
                 account => CreatedAtAction(
                     actionName: nameof(GetAccount),
-                    routeValues: new { id = account.AccountId },
+                    routeValues: new { id = account.Id },
                     value: account),
                 errors => Problem(errors));
         }
@@ -81,7 +81,7 @@ namespace BankAPI.Controllers
             return createSavingsAccount.Match(
                 account => CreatedAtAction(
                     actionName: nameof(GetAccount),
-                    routeValues: new { id = account.AccountId },
+                    routeValues: new { id = account.Id },
                     value: account),
                 errors => Problem(errors));
         }
@@ -100,7 +100,7 @@ namespace BankAPI.Controllers
             return createFixedTermInvestmentAccount.Match(
                 account => CreatedAtAction(
                     actionName: nameof(GetAccount),
-                    routeValues: new { id = account.AccountId },
+                    routeValues: new { id = account.Id },
                     value: account),
                 errors => Problem(errors));
         }

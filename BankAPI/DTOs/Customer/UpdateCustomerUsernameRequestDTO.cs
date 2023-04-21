@@ -1,3 +1,3 @@
 ﻿namespace BankAPI.DTOs.Customer;
 
-public record UpdateCustomerUsernameRequestDTO(string CustomerUsername);
+public record UpdateCustomerUsernameRequestDTO(string Username);

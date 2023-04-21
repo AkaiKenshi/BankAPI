@@ -2,9 +2,9 @@
 
 public record GetCustomerResponseDTO
 (
-    string CustomerId,
-    string CustomerUsername,
-    string CustomerFirstName,
-    string CustomerLastName,
-    string CustomerEmail
+    string Id,
+    string Username,
+    string FirstName,
+    string LastName,
+    string Email
 );

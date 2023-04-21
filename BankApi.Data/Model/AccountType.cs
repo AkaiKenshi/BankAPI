@@ -1,4 +1,4 @@
-﻿namespace BankAPI.Model
+﻿namespace BankAPI.Data.Model
 {
     public enum AccountType
     {

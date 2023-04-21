@@ -1,5 +1,5 @@
 ﻿using BankAPI.DTOs.Customer;
-using BankAPI.Model;
+using BankAPI.Data.Model;
 using AutoMapper;
 using BankAPI.DTOs.Account;
 

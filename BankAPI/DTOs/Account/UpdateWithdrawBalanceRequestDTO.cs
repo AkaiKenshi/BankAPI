@@ -1,5 +1,5 @@
 ﻿namespace BankAPI.DTOs.Account;
 
 public record UpdateWithdrawBalanceRequestDTO(
-    string AccountId, 
+    string Id, 
     double WithdawAmount); 

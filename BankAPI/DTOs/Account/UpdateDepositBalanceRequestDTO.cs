@@ -1,5 +1,5 @@
 ﻿namespace BankAPI.DTOs.Account;
 
 public record UpdateDepositBalanceRequestDTO(
-    string AccountId, 
+    string Id, 
     double DepositAmount); 

@@ -1,11 +1,11 @@
-﻿using BankAPI.Model;
+﻿using BankAPI.Data.Model;
 
 namespace BankAPI.DTOs.Account;
 
 public record GetAccountResponseDTO(
-    string AccountId,
-    double AccountBalance,
-    AccountType AccountTypeId,
-    string AccountOwnerId,
-    DateOnly AccountCraetedDate,
-    int? AccountTerm);
+    string Id,
+    double Balance,
+    AccountType AccountType,
+    string OwnerId,
+    DateOnly CraetedDate,
+    int? Term);

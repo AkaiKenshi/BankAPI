@@ -2,10 +2,10 @@
 
 public record CreateCustomerRequestDTO
 (
-    string CustomerId,
-    string CustomerUsername,
-    string CustomerFirtsName,
-    string CustomerLastName,
-    string CustomerEmail,
-    string CustomerPassword
+    string Id,
+    string Username,
+    string FirstName,
+    string LastName,
+    string Email,
+    string Password
 );
