@@ -1,5 +1,7 @@
+using BankAPI.Data;
 using BankAPI.Services.Accounts;
 using BankAPI.Services.Customers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -8,12 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddAutoMapper(typeof(Program).Assembly);
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen( c =>
+    builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1", new OpenApiInfo
         {
-            Title = "Bank Api",
-            Description  = "An Api to manage a fictitious Bank for a University Project",
+            Title = "Bank API",
+            Description = "An API to manage a fictitious Bank for a University Project",
             Version = "v0.1.23420a"
         });
         var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -24,7 +26,11 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<IAccountService, AccountService>();
+    builder.Services.AddDbContext<BankDataContext>(
+        o => o.UseNpgsql(builder.Configuration.GetConnectionString("BankAPI"))
+        );
 }
+
 var app = builder.Build();
 {
     // Configure the HTTP request pipeline.
