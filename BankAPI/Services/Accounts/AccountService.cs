@@ -74,7 +74,7 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<List<GetAccountResponseDTO>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId)
     {
-        var accountList = _context.Accounts.Where(a => a.Customer.Id == accountOwnerId).ToList();
+        var accountList = await _context.Accounts.Where(a => a.Customer.Id == accountOwnerId).ToListAsync();
         if(accountList == null || accountList.Count == 0) {  return Errors.Account.NotFound; }
         return accountList.Select(c => _mapper.Map<GetAccountResponseDTO>(c)).ToList(); 
     }
