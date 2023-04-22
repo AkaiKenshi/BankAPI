@@ -15,7 +15,7 @@
             <summary>
             This Services returns the all the accounts form the 
             </summary>
-            <param name="CustomerId"></param>
+            <param name="Id"></param>
             <returns></returns>
         </member>
         <member name="M:BankAPI.Controllers.AccountController.CreateCheckingAccount(BankAPI.DTOs.Account.CreateCheckingAccountRequestDTO)">

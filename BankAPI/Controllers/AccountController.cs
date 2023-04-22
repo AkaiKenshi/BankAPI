@@ -35,14 +35,14 @@ namespace BankAPI.Controllers
         /// <summary>
         /// This Services returns the all the accounts form the 
         /// </summary>
-        /// <param name="CustomerId"></param>
+        /// <param name="Id"></param>
         /// <returns></returns>
-        [HttpGet("getAllAccountsFromCustomer/{customerId}")]
+        [HttpGet("getAllAccountsFromCustomer/{Id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAllAccountsFromCustomer(string customerId)
+        public async Task<IActionResult> GetAllAccountsFromCustomer(string Id)
         {
-            var getAllAccounts = await _accountService.GetListOfAccountsFromOwnerAsync(customerId);
+            var getAllAccounts = await _accountService.GetListOfAccountsFromOwnerAsync(Id);
             return getAllAccounts.Match(
                 allAccounts => Ok(allAccounts),
                 errors => Problem(errors));

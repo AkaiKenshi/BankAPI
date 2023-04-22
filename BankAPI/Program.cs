@@ -27,7 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<IAccountService, AccountService>();
     builder.Services.AddDbContext<BankDataContext>(
-        o => o.UseNpgsql(builder.Configuration.GetConnectionString("BankAPI"))
+        o => o.UseNpgsql(builder.Configuration.GetConnectionString("BankAPIClass"))
         );
 }
 
