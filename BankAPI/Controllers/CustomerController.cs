@@ -167,24 +167,6 @@ public class CustomerController : ApiController
     }
 
     /// <summary>
-    /// This Service updates an existing customer's id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    [HttpPut("UpdateCustomerId/{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateCustomerId(string id, UpdateCustomerIdRequestDTO request)
-    {
-        var updateIdRequest = await _customerService.UpdateCustomerIdAsync(id, request);
-        return updateIdRequest.Match(
-            customer => NoContent(),
-            errors => Problem(errors));
-    }
-
-    /// <summary>
     /// This Service updates an existing customer's password
     /// </summary>
     /// <param name="id"></param>

@@ -1,4 +1,6 @@
-﻿using BankAPI.Data.Model;
+﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
+using BankAPI.Data.Model;
 
 namespace BankAPI.DTOs.Account;
 

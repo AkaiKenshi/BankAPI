@@ -30,7 +30,7 @@ public class CustomerService : ICustomerService
 
         await _context.AddAsync(newCustomer);
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return _mapper.Map<GetCustomerResponseDTO>(newCustomer);
     }
 
@@ -60,7 +60,7 @@ public class CustomerService : ICustomerService
 
     public async Task<ErrorOr<bool>> GetEmailAvailable(string email)
     {
-        return !(await _context.Customers.AnyAsync(c => c.Email == email));
+        return !(await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
     }
 
     public async Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest)
@@ -69,9 +69,9 @@ public class CustomerService : ICustomerService
         
         if (customer == null) { return Errors.Customer.NotFound; }
         customer.LastName = updateRequest.LastName;
-        customer.Username = updateRequest.FirstName;
+        customer.FirstName = updateRequest.FirstName;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Result.Updated;
     }
@@ -85,7 +85,7 @@ public class CustomerService : ICustomerService
 
         customer.Username = updateRequest.Username;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Result.Updated;
     }
 
@@ -99,21 +99,7 @@ public class CustomerService : ICustomerService
 
         customer.Email = updateRequest.Email;
 
-        _context.SaveChanges();
-        return Result.Updated;
-    }
-
-    public async Task<ErrorOr<Updated>> UpdateCustomerIdAsync(string id, UpdateCustomerIdRequestDTO updateRequest)
-    {
-        var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
-
-        if (customer == null) { return Errors.Customer.NotFound; }
-        else if (await _context.Customers.AnyAsync(c => c.Id.Equals(updateRequest.Id))) { return Errors.Customer.IdAlreadyExists; }
-        else if (!customer.Password.Equals(updateRequest.Password)) { return Errors.Customer.InvalidPassword; }
-
-        customer.Id = updateRequest.Id;
-        
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Result.Updated;
     }
 
@@ -126,18 +112,18 @@ public class CustomerService : ICustomerService
 
         customer.Password = updateRequest.NewPassword;
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return Result.Updated;
     }
 
     public async Task<ErrorOr<Deleted>> DeleteCustomerAsync(string id)
     {
-        var customer =  await _context.Customers.FirstOrDefaultAsync(c => c.Id.Equals(id));
+        var customer =  await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
 
         _context.Customers.Remove(customer);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return Result.Deleted;
     }

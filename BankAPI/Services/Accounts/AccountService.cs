@@ -22,7 +22,7 @@ public class AccountService : IAccountService
     
     public async Task<ErrorOr<GetAccountResponseDTO>> CreateChekingAccountAsync(CreateCheckingAccountRequestDTO request)
     {
-        var getGenerateAccount = await GenerateAccountAsync(_mapper.Map<Account>(request), request.OwnerId);
+        var getGenerateAccount = await GenerateAccountAsync(request.Balance, request.OwnerId);
         if(getGenerateAccount.IsError) { return getGenerateAccount.FirstError;  }
 
         var newAccount = getGenerateAccount.Value;
@@ -37,12 +37,13 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<GetAccountResponseDTO>> CreateFixedTermInvestmentAccountAsync(CreateFixedTermInvestmentAccountRequestDTO request)
     {
-        var getGenerateAccount = await GenerateAccountAsync(_mapper.Map<Account>(request), request.OwnerId);
+        var getGenerateAccount = await GenerateAccountAsync(request.Balance, request.OwnerId);
         if (getGenerateAccount.IsError) { return getGenerateAccount.FirstError; }
 
         var newAccount = getGenerateAccount.Value;
         newAccount.AccountType = AccountType.FixedTermInvestment;
         newAccount.CraetedDate = DateOnly.FromDateTime(DateTime.Now);
+        newAccount.Term = request.Term;
 
         await _context.AddAsync(newAccount);
         _context.SaveChanges();
@@ -52,7 +53,7 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<GetAccountResponseDTO>> CreateSavingsAccountAsync(CreateSavingsAccountRequestDTO request)
     {
-        var getGenerateAccount = await GenerateAccountAsync(_mapper.Map<Account>(request), request.OwnerId);
+        var getGenerateAccount = await GenerateAccountAsync(request.Balance, request.OwnerId);
         if (getGenerateAccount.IsError) { return getGenerateAccount.FirstError; }
 
         var newAccount = getGenerateAccount.Value;
@@ -67,14 +68,16 @@ public class AccountService : IAccountService
 
     public async Task<ErrorOr<GetAccountResponseDTO>> GetAccountAsync(string accountId)
     {
-        var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+        var account = await _context.Accounts.Include(c => c.Customer)
+            .FirstOrDefaultAsync(a => a.Id == accountId);
         if (account == null) { return Errors.Account.NotFound; }
         return _mapper.Map<GetAccountResponseDTO>(account);
     }
 
     public async Task<ErrorOr<List<GetAccountResponseDTO>>> GetListOfAccountsFromOwnerAsync(string accountOwnerId)
     {
-        var accountList = await _context.Accounts.Where(a => a.Customer.Id == accountOwnerId).ToListAsync();
+        var accountList = await _context.Accounts.Include(c => c.Customer)
+            .Where(a => a.Customer.Id == accountOwnerId).ToListAsync();
         if(accountList == null || accountList.Count == 0) {  return Errors.Account.NotFound; }
         return accountList.Select(c => _mapper.Map<GetAccountResponseDTO>(c)).ToList(); 
     }
@@ -134,13 +137,14 @@ public class AccountService : IAccountService
     }
 
     //Helper Functions
-    private async Task<string> GenerateID(Account newAccount) => ((await _context.Accounts.MaxAsync(a => int.Parse(a.Id))) + 1).ToString("D10");
-    private async Task<ErrorOr<Account>> GenerateAccountAsync(Account newAccount, string ownerID)
+    private async Task<ErrorOr<Account>> GenerateAccountAsync(double balance, string ownerID)
     {
-        var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == newAccount.Id);
+        var newAccount = new Account(); 
+        var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == ownerID);
         if (customer == null ) { return Errors.Customer.NotFound; }
+        else if (balance < 0) { return Errors.Account.AmountValidation; }
+        newAccount.Balance = balance;
         newAccount.Customer = customer;
-        newAccount.Id = await GenerateID(newAccount);
         newAccount.CraetedDate = DateOnly.FromDateTime(DateTime.Now);
         return newAccount;
     }

@@ -13,6 +13,6 @@ public class AutoMapperProfile : Profile
         CreateMap<CreateCheckingAccountRequestDTO, Account>();
         CreateMap<CreateSavingsAccountRequestDTO, Account>();
         CreateMap<CreateFixedTermInvestmentAccountRequestDTO, Account>();
-        CreateMap<Account, GetAccountResponseDTO>();
+        CreateMap<Account, GetAccountResponseDTO>().ForCtorParam("OwnerId", c => c.MapFrom(s => s.Customer.Id));
     }
 }
