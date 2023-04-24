@@ -72,7 +72,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateCheckingAccount(CreateCheckingAccountRequestDTO request)
     {
-        var createCheckingAccount = await _accountService.CreateChekingAccountAsync(request);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var createCheckingAccount = await _accountService.CreateChekingAccountAsync(request, customerId);
         return createCheckingAccount.Match(
             account => CreatedAtAction(
                 actionName: nameof(GetAccount),
@@ -91,7 +93,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateSavingsAccount(CreateSavingsAccountRequestDTO request)
     {
-        var createSavingsAccount = await _accountService.CreateSavingsAccountAsync(request);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var createSavingsAccount = await _accountService.CreateSavingsAccountAsync(request, customerId);
         return createSavingsAccount.Match(
             account => CreatedAtAction(
                 actionName: nameof(GetAccount),
@@ -110,7 +114,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateFixedTermInvestmentAccount(CreateFixedTermInvestmentAccountRequestDTO request)
     {
-        var createFixedTermInvestmentAccount = await _accountService.CreateFixedTermInvestmentAccountAsync(request);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var createFixedTermInvestmentAccount = await _accountService.CreateFixedTermInvestmentAccountAsync(request, customerId);
         return createFixedTermInvestmentAccount.Match(
             account => CreatedAtAction(
                 actionName: nameof(GetAccount),
