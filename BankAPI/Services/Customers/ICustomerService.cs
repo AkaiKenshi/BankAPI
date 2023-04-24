@@ -1,4 +1,4 @@
-﻿using BankAPI.DTOs.Customer;
+﻿using BankAPI.DTOs.Customers;
 using ErrorOr;
 
 namespace BankAPI.Services.Customers;
@@ -6,11 +6,10 @@ namespace BankAPI.Services.Customers;
 public interface ICustomerService
 {
     Task<ErrorOr<GetCustomerResponseDTO>> CreateCustomerAsync(CreateCustomerRequestDTO createRequest);
-    Task<ErrorOr<GetCustomerResponseDTO>> GetCustomerAsync(string id);
-    Task<ErrorOr<GetCustomerResponseDTO>> GetCustomerByUsernameAsync(string username);
-    Task<ErrorOr<bool>> GetIdAvailable(string id);
-    Task<ErrorOr<bool>> GetUsernameAvailable(string username);
-    Task<ErrorOr<bool>> GetEmailAvailable(string email);
+    Task<bool> GetIdAvailable(string id);
+    Task<bool> GetUsernameAvailable(string username);
+    Task<bool> GetEmailAvailable(string email);
+    Task<ErrorOr<GetCustomerResponseDTO>> GetLoginCustomer(GetCustomerLoginRequestDTO loginRequest);
     Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest);
     Task<ErrorOr<Updated>> UpdateCustomerUsernameAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest);
     Task<ErrorOr<Updated>> UpdateCustomerEmailAsync(string id, UpdateCustomerEmailRequestDTO updateRequest);

@@ -1,5 +1,7 @@
-﻿namespace BankAPI.DTOs.Customer;
+﻿namespace BankAPI.DTOs.Customers;
 
-public record UpdateCustomerEmailRequestDTO(
+public record UpdateCustomerEmailRequestDTO
+(
     string Email,
-    string Password);
+    string Password
+);

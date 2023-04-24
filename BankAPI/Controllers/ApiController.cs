@@ -1,10 +1,13 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace BankAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class ApiController : ControllerBase
     {
         protected IActionResult Problem(List<Error> errors)

@@ -14,9 +14,17 @@ public partial class Errors
             code: "Customer.UnexpectedError",
             description: "There was an unexpected Error");
 
+        public static Error IlligalPassword => Error.Validation(
+            code: "Customer.IlligalPassword",
+            description: "This is password is not a valid password");
+
         public static Error InvalidPassword => Error.Validation(
             code: "Customer.InvalidPassword",
-            description: "Incorrect Password"); 
+            description: "Incorrect Password");
+
+        public static Error InvalidLogin => Error.Validation(
+            code: "Customer.InvalidLogin",
+            description: "Incorrect username or login"); 
 
         public static Error InvalidId => Error.Validation(
             code: "Customer.InvalidId",

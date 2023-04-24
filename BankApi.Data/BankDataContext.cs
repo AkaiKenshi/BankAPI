@@ -21,6 +21,11 @@ public class BankDataContext : DbContext
             .Property(e => e.Id)
             .HasDefaultValueSql("lpad(nextval('account_seq')::VARCHAR(10), 10, '0')")
             .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<Account>()
+            .HasOne(a => a.Customer)
+            .WithMany(c => c.Accounts)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
 

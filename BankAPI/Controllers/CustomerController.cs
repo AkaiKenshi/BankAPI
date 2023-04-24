@@ -1,12 +1,14 @@
-﻿using BankAPI.DTOs.Customer;
+﻿using BankAPI.Data.Model;
+using BankAPI.DTOs.Customers;
 using BankAPI.Services.Customers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Security.Claims;
 
 namespace BankAPI.Controllers;
 
-[Produces(MediaTypeNames.Application.Json)]
-[Consumes(MediaTypeNames.Application.Json)]
+
 public class CustomerController : ApiController
 {
     private readonly ICustomerService _customerService;
@@ -16,38 +18,7 @@ public class CustomerController : ApiController
         _customerService = customerService;
     }
 
-    /// <summary>
-    /// This Service returns the customer for the given Id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetCustomer(string id)
-    {
-        var getCustomerResponse = await _customerService.GetCustomerAsync(id);
-        return getCustomerResponse.Match(
-            customer => Ok(customer),
-            errors => Problem(errors)
-            );
-    }
-
-    /// <summary>
-    /// This Service returns the customer for the given username
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns></returns>
-    [HttpGet("GetCustomerByUsername/{username}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetCustomerByUsername(string username)
-    {
-        var getCustomerByUsername = await _customerService.GetCustomerByUsernameAsync(username);
-        return getCustomerByUsername.Match(
-            customer => Ok(customer),
-            errors => Problem(errors));
-    }
+    #region Get
 
     /// <summary>
     /// This Service checks if an Id is available
@@ -56,13 +27,7 @@ public class CustomerController : ApiController
     /// <returns></returns>
     [HttpGet("isCustomerIdAvailable/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomerIdAvailable(string id)
-    {
-        var getAvailableId = await _customerService.GetIdAvailable(id);
-        return getAvailableId.Match(
-            available => Ok(available),
-            errors => Problem(errors));
-    }
+    public async Task<IActionResult> GetCustomerIdAvailable(string id) => Ok(await _customerService.GetIdAvailable(id));
 
     /// <summary>
     /// This Service checks if a Username is available
@@ -71,13 +36,7 @@ public class CustomerController : ApiController
     /// <returns></returns>
     [HttpGet("isCustomerUsernameAvailable/{username}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomerUsernameAvailable(string username)
-    {
-        var getAvailableUsername = await _customerService.GetUsernameAvailable(username);
-        return getAvailableUsername.Match(
-            available => Ok(available),
-            errors => Problem(errors));
-    }
+    public async Task<IActionResult> GetCustomerUsernameAvailable(string username) => Ok(await _customerService.GetUsernameAvailable(username));
 
     /// <summary>
     /// This Service checks if a email is available
@@ -86,20 +45,17 @@ public class CustomerController : ApiController
     /// <returns></returns>
     [HttpGet("isCustomerEmailAvailable/{email}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomerEmailAvailable(string email)
-    {
-        var getAvailableEmail = await _customerService.GetEmailAvailable(email);
-        return getAvailableEmail.Match(
-            available => Ok(available),
-            errors => Problem(errors));
-    }
+    public async Task<IActionResult> GetCustomerEmailAvailable(string email) => Ok(await _customerService.GetEmailAvailable(email));
+
+    #endregion
+    #region Post
 
     /// <summary>
     /// This Service creates a new customer
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPost("Register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDTO request)
@@ -107,23 +63,46 @@ public class CustomerController : ApiController
         var createCustomerRequest = await _customerService.CreateCustomerAsync(request);
         return createCustomerRequest.Match(
             customer => CreatedAtAction(
-                actionName: nameof(GetCustomer),
+                actionName: nameof(CreateCustomer),
                 routeValues: new { id = request.Id },
                 value: customer),
             errors => Problem(errors));
     }
 
+
+    /// <summary>
+    /// This Service gets the account login
+    /// </summary>
+    /// <param name="getRequest"></param>
+    /// <returns></returns>
+    [HttpPost("Login")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> LoginCustomer(GetCustomerLoginRequestDTO getRequest)
+    {
+        var getLoginRequest = await _customerService.GetLoginCustomer(getRequest);
+
+        return getLoginRequest.Match(
+            customer => Ok(customer),
+            errors => Problem(errors));
+
+    }
+
+    #endregion
+    #region update 
+
     /// <summary>
     /// This Service updates an existing customer's first and last name
     /// </summary>
-    /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPut("UpdateCustomerInformation/{id}")]
+    [Authorize]
+    [HttpPut("UpdateCustomerInformation")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateCustomerInformation(string id, UpdateCustomerInformationRequestDTO request)
+    public async Task<IActionResult> UpdateCustomerInformation(UpdateCustomerInformationRequestDTO request)
     {
+        var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;  
         var updateInformationRequest = await _customerService.UpdateCustomerInformationAsync(id, request);
         return updateInformationRequest.Match(
             customer => NoContent(),
@@ -133,15 +112,16 @@ public class CustomerController : ApiController
     /// <summary>
     /// This Service updates an exiting customer's username
     /// </summary>
-    /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPut("UpdateCustomerUsername/{id}")]
+    [Authorize]
+    [HttpPut("UpdateCustomerUsername")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateCustomerUsername(string id, UpdateCustomerUsernameRequestDTO request)
+    public async Task<IActionResult> UpdateCustomerUsername(UpdateCustomerUsernameRequestDTO request)
     {
+        var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
         var updateUsernameRequest = await _customerService.UpdateCustomerUsernameAsync(id, request);
         return updateUsernameRequest.Match(
             customer => NoContent(),
@@ -151,15 +131,16 @@ public class CustomerController : ApiController
     /// <summary>
     /// This Service updates an existing customer's Email
     /// </summary>
-    /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPut("UpdateCustomerEmail/{id}")]
+    [Authorize]
+    [HttpPut("UpdateCustomerEmail")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateCustomerEmail(string id, UpdateCustomerEmailRequestDTO request)
+    public async Task<IActionResult> UpdateCustomerEmail(UpdateCustomerEmailRequestDTO request)
     {
+        var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
         var updateEmailRequest = await _customerService.UpdateCustomerEmailAsync(id, request);
         return updateEmailRequest.Match(
             customer => NoContent(),
@@ -169,34 +150,41 @@ public class CustomerController : ApiController
     /// <summary>
     /// This Service updates an existing customer's password
     /// </summary>
-    /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPut("updateCustomerPassword/{id}")]
+    [Authorize]    
+    [HttpPut("updateCustomerPassword")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateCustomerPassword(string id, UpdateCustomerPasswordRequestDTO request)
+    public async Task<IActionResult> UpdateCustomerPassword(UpdateCustomerPasswordRequestDTO request)
     {
+        var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
         var updatePasswordRequest = await _customerService.UpdateCustomerPasswordAsync(id, request);
         return updatePasswordRequest.Match(
             customer => NoContent(),
             errors => Problem(errors));
     }
 
+    #endregion
+    #region delete
+
     /// <summary>
     /// This Service deletes an existing customer
     /// </summary>
-    /// <param name="id"></param>
+    /// <param></param>
     /// <returns></returns>
-    [HttpDelete("{id}")]
+    [Authorize]
+    [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteCustomer(string id)
+    public async Task<IActionResult> DeleteCustomer()
     {
+        var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
         var deleteCustomerRequest = await _customerService.DeleteCustomerAsync(id);
         return deleteCustomerRequest.Match(
             customer => NoContent(),
             errors => Problem(errors));
     }
+    #endregion
 }

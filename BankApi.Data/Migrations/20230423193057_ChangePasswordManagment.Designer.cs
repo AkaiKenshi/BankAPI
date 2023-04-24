@@ -3,6 +3,7 @@ using System;
 using BankAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BankAPI.Data.Migrations
 {
     [DbContext(typeof(BankDataContext))]
-    partial class BankDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230423193057_ChangePasswordManagment")]
+    partial class ChangePasswordManagment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,6 @@ namespace BankAPI.Data.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("character varying(10)");
 
                     b.Property<int?>("Term")
@@ -99,9 +101,7 @@ namespace BankAPI.Data.Migrations
                 {
                     b.HasOne("BankAPI.Data.Model.Customer", "Customer")
                         .WithMany("Accounts")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
                     b.Navigation("Customer");
                 });

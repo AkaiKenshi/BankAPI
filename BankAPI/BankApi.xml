@@ -67,20 +67,6 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.GetCustomer(System.String)">
-            <summary>
-            This Service returns the customer for the given Id
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BankAPI.Controllers.CustomerController.GetCustomerByUsername(System.String)">
-            <summary>
-            This Service returns the customer for the given username
-            </summary>
-            <param name="username"></param>
-            <returns></returns>
-        </member>
         <member name="M:BankAPI.Controllers.CustomerController.GetCustomerIdAvailable(System.String)">
             <summary>
             This Service checks if an Id is available
@@ -107,6 +93,13 @@
             This Service creates a new customer
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankAPI.Controllers.CustomerController.LoginCustomer(BankAPI.DTOs.Customer.GetCustomerLoginRequestDTO)">
+            <summary>
+            This Service gets the account login
+            </summary>
+            <param name="getRequest"></param>
             <returns></returns>
         </member>
         <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerInformation(System.String,BankAPI.DTOs.Customer.UpdateCustomerInformationRequestDTO)">

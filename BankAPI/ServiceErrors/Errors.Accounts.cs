@@ -19,5 +19,10 @@ public partial class Errors
         public static Error InvalidAction => Error.Validation(
             code: "Account.InvalidAction",
             description: "This account does not support this action");
+
+        public static Error UnauthorizedAccountAccess => Error.Custom(
+            type: StatusCodes.Status403Forbidden,
+            code: "Account.UnauthoizedAccess",
+            description: "This account you're trying to access is not yours");
     }
 }

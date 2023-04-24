@@ -2,5 +2,4 @@
 
 public record CreateFixedTermInvestmentAccountRequestDTO(
     double Balance,
-    string OwnerId,
     int Term); 

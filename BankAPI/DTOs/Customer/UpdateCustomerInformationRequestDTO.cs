@@ -1,4 +1,4 @@
-﻿namespace BankAPI.DTOs.Customer;
+﻿namespace BankAPI.DTOs.Customers;
 
 public record UpdateCustomerInformationRequestDTO
 (

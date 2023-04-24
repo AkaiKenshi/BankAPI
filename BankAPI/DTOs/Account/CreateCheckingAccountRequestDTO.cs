@@ -1,5 +1,3 @@
 ﻿namespace BankAPI.DTOs.Account;
 
-public record CreateCheckingAccountRequestDTO(
-    double Balance, 
-    string OwnerId);
+public record CreateCheckingAccountRequestDTO(double Balance);

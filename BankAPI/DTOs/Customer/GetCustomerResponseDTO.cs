@@ -1,7 +1,8 @@
-﻿namespace BankAPI.DTOs.Customer;
+﻿namespace BankAPI.DTOs.Customers;
 
 public record GetCustomerResponseDTO
 (
+    string Token,
     string Id,
     string Username,
     string FirstName,
