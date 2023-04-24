@@ -1,6 +1,7 @@
 using BankAPI.Data;
 using BankAPI.Services.Accounts;
 using BankAPI.Services.Customers;
+using BankAPI.Services.Time;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -39,6 +40,8 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddScoped<ICustomerService, CustomerService>();
     builder.Services.AddScoped<IAccountService, AccountService>();
+    builder.Services.AddScoped<ITimeService, TimeService>();    
+
     builder.Services.AddDbContext<BankDataContext>(
         o => o.UseNpgsql(builder.Configuration.GetConnectionString("BankAPI")));
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

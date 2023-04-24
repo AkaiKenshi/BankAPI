@@ -1,7 +1,7 @@
-﻿using BankAPI.DTOs.Customers;
-using BankAPI.Data.Model;
+﻿using BankAPI.Data.Model;
 using AutoMapper;
-using BankAPI.DTOs.Account;
+using BankAPI.Contracts.DTOs.Customers;
+using BankAPI.Contracts.DTOs.Accounts;
 
 namespace BankAPI;
 public class AutoMapperProfile : Profile

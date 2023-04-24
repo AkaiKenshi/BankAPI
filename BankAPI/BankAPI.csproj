@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BankAPI.Contracts\BankAPI.Contracts.csproj" />
     <ProjectReference Include="..\BankApi.Data\BankAPI.Data.csproj" />
   </ItemGroup>
 

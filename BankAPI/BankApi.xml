@@ -11,49 +11,49 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.GetAllAccountsFromCustomer(System.String)">
+        <member name="M:BankAPI.Controllers.AccountController.GetAllAccounts">
             <summary>
-            This Services returns the all the accounts form the 
+            This Services returns the all the accounts form the user
             </summary>
-            <param name="Id"></param>
+            <param></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.CreateCheckingAccount(BankAPI.DTOs.Account.CreateCheckingAccountRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.CreateCheckingAccount(BankAPI.Contracts.DTOs.Accounts.CreateCheckingAccountRequestDTO)">
             <summary>
             This Service creates a new checking account 
             </summary>
             <param name="request"></param>
             <returns> </returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.CreateSavingsAccount(BankAPI.DTOs.Account.CreateSavingsAccountRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.CreateSavingsAccount(BankAPI.Contracts.DTOs.Accounts.CreateSavingsAccountRequestDTO)">
             <summary>
             This Service creates a new savings account 
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.CreateFixedTermInvestmentAccount(BankAPI.DTOs.Account.CreateFixedTermInvestmentAccountRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.CreateFixedTermInvestmentAccount(BankAPI.Contracts.DTOs.Accounts.CreateFixedTermInvestmentAccountRequestDTO)">
             <summary>
             This Service creates a new fixed term investment account 
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.UpdateWithdrawBalance(BankAPI.DTOs.Account.UpdateWithdrawBalanceRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.UpdateWithdrawBalance(BankAPI.Contracts.DTOs.Accounts.UpdateWithdrawBalanceRequestDTO)">
             <summary>
             This Service is used to withdraw money from a an account
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.UpdateDepositBalance(BankAPI.DTOs.Account.UpdateDepositBalanceRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.UpdateDepositBalance(BankAPI.Contracts.DTOs.Accounts.UpdateDepositBalanceRequestDTO)">
             <summary>
             This Service is used to deposit money from a an account
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.UpdateTransferBalance(BankAPI.DTOs.Account.UpdateTransferBalanceRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.UpdateTransferBalance(BankAPI.Contracts.DTOs.Accounts.UpdateTransferBalanceRequestDTO)">
             <summary>
             This Service is used to transfer money from a an account
             </summary>
@@ -88,57 +88,53 @@
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.CreateCustomer(BankAPI.DTOs.Customer.CreateCustomerRequestDTO)">
+        <member name="M:BankAPI.Controllers.CustomerController.CreateCustomer(BankAPI.Contracts.DTOs.Customers.CreateCustomerRequestDTO)">
             <summary>
             This Service creates a new customer
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.LoginCustomer(BankAPI.DTOs.Customer.GetCustomerLoginRequestDTO)">
+        <member name="M:BankAPI.Controllers.CustomerController.LoginCustomer(BankAPI.Contracts.DTOs.Customers.GetCustomerLoginRequestDTO)">
             <summary>
             This Service gets the account login
             </summary>
             <param name="getRequest"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerInformation(System.String,BankAPI.DTOs.Customer.UpdateCustomerInformationRequestDTO)">
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerInformation(BankAPI.Contracts.DTOs.Customers.UpdateCustomerInformationRequestDTO)">
             <summary>
             This Service updates an existing customer's first and last name
             </summary>
-            <param name="id"></param>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerUsername(System.String,BankAPI.DTOs.Customer.UpdateCustomerUsernameRequestDTO)">
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerUsername(BankAPI.Contracts.DTOs.Customers.UpdateCustomerUsernameRequestDTO)">
             <summary>
             This Service updates an exiting customer's username
             </summary>
-            <param name="id"></param>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerEmail(System.String,BankAPI.DTOs.Customer.UpdateCustomerEmailRequestDTO)">
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerEmail(BankAPI.Contracts.DTOs.Customers.UpdateCustomerEmailRequestDTO)">
             <summary>
             This Service updates an existing customer's Email
             </summary>
-            <param name="id"></param>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerPassword(System.String,BankAPI.DTOs.Customer.UpdateCustomerPasswordRequestDTO)">
+        <member name="M:BankAPI.Controllers.CustomerController.UpdateCustomerPassword(BankAPI.Contracts.DTOs.Customers.UpdateCustomerPasswordRequestDTO)">
             <summary>
             This Service updates an existing customer's password
             </summary>
-            <param name="id"></param>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.CustomerController.DeleteCustomer(System.String)">
+        <member name="M:BankAPI.Controllers.CustomerController.DeleteCustomer">
             <summary>
             This Service deletes an existing customer
             </summary>
-            <param name="id"></param>
+            <param></param>
             <returns></returns>
         </member>
     </members>

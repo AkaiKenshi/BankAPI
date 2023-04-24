@@ -1,4 +1,4 @@
-﻿using BankAPI.DTOs.Account;
+﻿using BankAPI.Contracts.DTOs.Accounts;
 using BankAPI.Services.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

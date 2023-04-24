@@ -1,4 +1,4 @@
-﻿using BankAPI.DTOs.Customers;
+﻿using BankAPI.Contracts.DTOs.Customers;
 using ErrorOr;
 
 namespace BankAPI.Services.Customers;

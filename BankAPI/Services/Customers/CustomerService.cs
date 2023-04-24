@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
-using BankAPI.DTOs.Customers;
-using BankAPI.Data.Model;
 using BankAPI.ServiceErrors;
 using ErrorOr;
-using System.Diagnostics.CodeAnalysis;
 using BankAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using static BankAPI.ServiceErrors.Errors;
+using BankAPI.Contracts.DTOs.Customers;
 
 namespace BankAPI.Services.Customers;
 
@@ -65,7 +62,7 @@ public class CustomerService : ICustomerService
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Username == loginRequest.Username);
 
         if (customer == null 
-            || VerifyPasswordHash(loginRequest.Password, customer.PasswordHash, customer.PasswordSalt))
+            || !VerifyPasswordHash(loginRequest.Password, customer.PasswordHash, customer.PasswordSalt))
         {
             return Errors.Customer.InvalidPassword;
         }
@@ -120,7 +117,7 @@ public class CustomerService : ICustomerService
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
-        else if (VerifyPasswordHash(updateRequest.OldPassword, customer.PasswordHash, customer.PasswordSalt)) { return Errors.Customer.InvalidPassword; }
+        else if (!VerifyPasswordHash(updateRequest.OldPassword, customer.PasswordHash, customer.PasswordSalt)) { return Errors.Customer.InvalidPassword; }
 
         CreatePasswordHash(updateRequest.NewPassword, out var passwordHash, out var passwordSalt);
 
@@ -162,7 +159,10 @@ public class CustomerService : ICustomerService
 
         var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
-        return passwordHash.Equals(computedHash);
+        Console.WriteLine("Is Valid Password: " + passwordHash.SequenceEqual(computedHash));
+        Console.WriteLine("passwordHash: " + ConvertByteArrayToString(passwordHash) + " / computedHash: " + ConvertByteArrayToString(computedHash));
+
+        return passwordHash.SequenceEqual(computedHash);
     }
 
     private string CreateToken(Data.Model.Customer customer)
@@ -173,9 +173,7 @@ public class CustomerService : ICustomerService
             new Claim(ClaimTypes.Name, customer.Username)
         };
 
-        var appSettingsToken = _configuration.GetSection("AppSettings:Token").Value;
-        if (appSettingsToken == null) { throw new ArgumentNullException(nameof(appSettingsToken)); }
-
+        string appSettingsToken = _configuration.GetSection("AppSettings:Token").Value ?? throw new NullReferenceException("invalid token");
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(appSettingsToken));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -190,6 +188,16 @@ public class CustomerService : ICustomerService
 
         return tokenHandler.WriteToken(token); 
 
+    }
+
+    private static string ConvertByteArrayToString(byte[] bytes)
+    {
+        string finalString = "";
+        foreach (byte b in bytes)
+        {
+            finalString += b;
+        }
+        return finalString;
     }
 
     #endregion
