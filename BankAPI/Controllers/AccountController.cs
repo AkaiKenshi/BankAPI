@@ -51,9 +51,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllAccounts()
     {
-        var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
 
-        var getAllAccounts = await _accountService.GetListOfAccountsFromOwnerAsync(id);
+        var getAllAccounts = await _accountService.GetListOfAccountsFromOwnerAsync(customerId);
         return getAllAccounts.Match(
             allAccounts => Ok(allAccounts),
             errors => Problem(errors));
@@ -133,7 +133,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateWithdrawBalance(UpdateWithdrawBalanceRequestDTO request)
     {
-        var updateWithdraw = await _accountService.UpdateWithdrawBalanceAsync(request);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var updateWithdraw = await _accountService.UpdateWithdrawBalanceAsync(request, customerId);
         return updateWithdraw.Match(
             account => NoContent(),
             errors => Problem(errors));
@@ -150,7 +152,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateDepositBalance(UpdateDepositBalanceRequestDTO request)
     {
-        var updateDeposit = await _accountService.UpdateDepositBalanceAsync(request);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var updateDeposit = await _accountService.UpdateDepositBalanceAsync(request, customerId);
         return updateDeposit.Match(
             account => NoContent(),
             errors => Problem(errors));
@@ -167,7 +171,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateTransferBalance(UpdateTransferBalanceRequestDTO request)
     {
-        var updateTransfer = await _accountService.UpdateTransferBalanceAsync(request);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var updateTransfer = await _accountService.UpdateTransferBalanceAsync(request, customerId);
         return updateTransfer.Match(
             account => NoContent(),
             errors => Problem(errors));
@@ -187,7 +193,9 @@ public class AccountController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteAccount(string id)
     {
-        var deleteAccount = await _accountService.DeleteAccountAsync(id);
+        var customerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+
+        var deleteAccount = await _accountService.DeleteAccountAsync(id, customerId);
         return deleteAccount.Match(
             account => NoContent(),
             errors => Problem(errors));
