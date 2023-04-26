@@ -2,6 +2,7 @@
 using BankAPI.Data.Model;
 using BankAPI.ServiceErrors;
 using ErrorOr;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankAPI.Services.Time
@@ -21,26 +22,30 @@ namespace BankAPI.Services.Time
 
             if (time == null) { return Errors.Time.NotFound; }
             else if (accounts == null) { return Errors.Account.NotFound; }
-            
+
             time.CurrentDate = time.CurrentDate.AddMonths(timeMonths);
 
             for (int i = 0; i < accounts.Count; i++)
             {
                 var multiplier = accounts[i].AccountType switch
                 {
-                    AccountType.Savings => 1.6*timeMonths,
+                    AccountType.Savings => 1.6 * timeMonths,
                     AccountType.Checking => 1,
-                    AccountType.FixedTermInvestment => 4.5*timeMonths,
+                    AccountType.FixedTermInvestment => 4.5 * ((timeMonths > accounts[i].Term!) ? (double)accounts[i].Term! : timeMonths),
                     _ => 0
-                }; 
+                };
 
                 accounts[i].Balance *= multiplier;
 
-                if (accounts[i].AccountType == AccountType.FixedTermInvestment &&
-                    accounts[i].CraetedDate.AddMonths((int)accounts[i].Term!) >= time.CurrentDate) 
+                switch (accounts[i].AccountType)
                 {
-                    accounts[i].AccountType = AccountType.Checking;
-                    accounts[i].Term = null;
+                    case AccountType.FixedTermInvestment when accounts[i].Term >= timeMonths:
+                        accounts[i].Term = null;
+                        accounts[i].AccountType = AccountType.Checking;
+                        break;
+                    case AccountType.FixedTermInvestment:
+                        accounts[i].Term -= timeMonths;
+                        break;
                 }
             }
 
