@@ -1,15 +1,15 @@
-﻿using AutoMapper;
+﻿using static BankAPI.ServiceErrors.Errors;
 using BankAPI.DTOs.Customers;
-using BankAPI.Data.Model;
 using BankAPI.ServiceErrors;
-using ErrorOr;
-using System.Diagnostics.CodeAnalysis;
 using BankAPI.Data;
+using ErrorOr;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using static BankAPI.ServiceErrors.Errors;
+using System.Text.RegularExpressions;
 
 namespace BankAPI.Services.Customers;
 
@@ -31,16 +31,20 @@ public class CustomerService : ICustomerService
     public async Task<ErrorOr<GetCustomerResponseDTO>> CreateCustomerAsync(CreateCustomerRequestDTO createRequest)
     {
         var newCustomer = _mapper.Map<Data.Model.Customer>(createRequest);
-        CreatePasswordHash(createRequest.Password, out var passwordHash, out var passwordSalt);
 
-        if (passwordHash == null || passwordSalt == null) { return Errors.Customer.IlligalPassword; }
+        if (string.IsNullOrWhiteSpace(createRequest.FirstName) || string.IsNullOrWhiteSpace(createRequest.LastName) 
+            || string.IsNullOrWhiteSpace(createRequest.Username)) { return Errors.Customer.IlligalData; }
+        else if (!ValidatePassword(createRequest.Password)) { return Errors.Customer.IlligalPassword; }
+        else if (!ValidateId(createRequest.Id)) { return Errors.Customer.IlligalId; }
+        else if (!ValidateEmail(createRequest.Email)) { return Errors.Customer.IlligalEmail;  }
         else if (!await GetIdAvailable(createRequest.Id)) { return Errors.Customer.IdAlreadyExists; }
         else if (!await GetUsernameAvailable(createRequest.Username)) { return Errors.Customer.UsernameAlreadyExists; }
         else if (!await GetEmailAvailable(createRequest.Email)) { return Errors.Customer.EmailAlreadyExists; }
 
+        CreatePasswordHash(createRequest.Password, out var passwordHash, out var passwordSalt);
+
         newCustomer.PasswordSalt = passwordSalt;
         newCustomer.PasswordHash = passwordHash;
-        
         newCustomer.Token = CreateToken(newCustomer);
 
         await _context.AddAsync(newCustomer);
@@ -52,19 +56,22 @@ public class CustomerService : ICustomerService
 
     //Gets
     public async Task<bool> GetIdAvailable(string id) =>
-         !(await _context.Customers.AnyAsync(c => c.Id == id));
+         !(ValidateId(id) || await _context.Customers.AnyAsync(c => c.Id == id));
 
     public async Task<bool> GetUsernameAvailable(string username) =>
-        !(await _context.Customers.AnyAsync(c => c.Username == username));
+        !(!string.IsNullOrWhiteSpace(username) || await _context.Customers.AnyAsync(c => c.Username == username));
 
     public async Task<bool> GetEmailAvailable(string email) =>
-         !(await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
+         !(ValidateEmail(email) || await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
+
+    public bool GetVaildPassword(string password) =>
+        ValidatePassword(password); 
 
     public async Task<ErrorOr<GetCustomerResponseDTO>> GetLoginCustomer(GetCustomerLoginRequestDTO loginRequest)
     {
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Username == loginRequest.Username);
 
-        if (customer == null 
+        if (customer == null
             || VerifyPasswordHash(loginRequest.Password, customer.PasswordHash, customer.PasswordSalt))
         {
             return Errors.Customer.InvalidPassword;
@@ -183,13 +190,46 @@ public class CustomerService : ICustomerService
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.Now.AddDays(1),
             SigningCredentials = credentials
-        }; 
+        };
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        return tokenHandler.WriteToken(token); 
+        return tokenHandler.WriteToken(token);
+    }
 
+    private bool ValidatePassword(string password)
+    {
+        string pattern = @"^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$";
+        if (string.IsNullOrWhiteSpace(password)) { return false; }
+        return Regex.IsMatch(password, pattern);
+    }
+
+    private bool ValidateId(string? id)
+    {
+        var sum = 0;
+        if (string.IsNullOrWhiteSpace(id)
+            || id.Length != 10
+            || !int.TryParse(id, out _)
+            || int.Parse(id[..2]) > 24
+            || int.Parse(id[3].ToString()) > 6) { return false; }
+
+        for (int i = 0; i < 8; i++)
+        {
+            var num = int.Parse(id[i].ToString());
+            num = (num > 9) ? num - 9 : num;
+            sum += num * ((i + 1) % 2 + 1);
+        }
+        var checkNum = ((sum / 10) + 1) * 10;
+
+        return (checkNum - sum) == int.Parse(id[9].ToString());
+    }
+
+    private bool ValidateEmail(string email)
+    {
+        string pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"; 
+        if (string.IsNullOrWhiteSpace(email)) { return false;}
+        return Regex.IsMatch(email, pattern);
     }
 
     #endregion

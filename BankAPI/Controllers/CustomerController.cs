@@ -47,6 +47,15 @@ public class CustomerController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomerEmailAvailable(string email) => Ok(await _customerService.GetEmailAvailable(email));
 
+    /// <summary>
+    /// This Service checks if the password is a valid password 
+    /// </summary>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    [HttpGet("isValidPassword/{password}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult GetValidPassword(string password) => Ok(_customerService.GetVaildPassword(password));
+
     #endregion
     #region Post
 

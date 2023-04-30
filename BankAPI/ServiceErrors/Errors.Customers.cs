@@ -18,6 +18,18 @@ public partial class Errors
             code: "Customer.IlligalPassword",
             description: "This is password is not a valid password");
 
+        public static Error IlligalId => Error.Validation(
+            code: "Customer.IlligalId",
+            description: "This Id is not a valid Id"); 
+
+        public static Error IlligalEmail => Error.Validation(
+            code: "Customer.IlligalEmail",
+            description: "This Email is not a valid Email");
+
+        public static Error IlligalData => Error.Validation(
+            code: "Custorm.IlligalData",
+            description: "Some of the information you provided is empty");
+
         public static Error InvalidPassword => Error.Validation(
             code: "Customer.InvalidPassword",
             description: "Incorrect Password");
