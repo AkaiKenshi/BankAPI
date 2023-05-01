@@ -36,7 +36,7 @@ public partial class Errors
 
         public static Error InvalidLogin => Error.Validation(
             code: "Customer.InvalidLogin",
-            description: "Incorrect username or login"); 
+            description: "Incorrect username or password"); 
 
         public static Error InvalidId => Error.Validation(
             code: "Customer.InvalidId",

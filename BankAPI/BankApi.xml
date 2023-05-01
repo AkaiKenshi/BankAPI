@@ -88,6 +88,13 @@
             <param name="email"></param>
             <returns></returns>
         </member>
+        <member name="M:BankAPI.Controllers.CustomerController.GetValidPassword(System.String)">
+            <summary>
+            This Service checks if the password is a valid password 
+            </summary>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
         <member name="M:BankAPI.Controllers.CustomerController.CreateCustomer(BankAPI.DTOs.Customers.CreateCustomerRequestDTO)">
             <summary>
             This Service creates a new customer

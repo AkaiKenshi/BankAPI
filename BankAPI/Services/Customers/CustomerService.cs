@@ -74,7 +74,7 @@ public class CustomerService : ICustomerService
         if (customer == null
             || VerifyPasswordHash(loginRequest.Password, customer.PasswordHash, customer.PasswordSalt))
         {
-            return Errors.Customer.InvalidPassword;
+            return Errors.Customer.InvalidLogin;
         }
 
         customer.Token = CreateToken(customer);
@@ -128,6 +128,7 @@ public class CustomerService : ICustomerService
 
         if (customer == null) { return Errors.Customer.NotFound; }
         else if (VerifyPasswordHash(updateRequest.OldPassword, customer.PasswordHash, customer.PasswordSalt)) { return Errors.Customer.InvalidPassword; }
+        else if (ValidatePassword(updateRequest.NewPassword)) { return Errors.Customer.IlligalPassword; }
 
         CreatePasswordHash(updateRequest.NewPassword, out var passwordHash, out var passwordSalt);
 
