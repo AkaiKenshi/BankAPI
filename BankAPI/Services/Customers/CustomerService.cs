@@ -37,9 +37,9 @@ public class CustomerService : ICustomerService
         else if (!ValidatePassword(createRequest.Password)) { return Errors.Customer.IlligalPassword; }
         else if (!ValidateId(createRequest.Id)) { return Errors.Customer.IlligalId; }
         else if (!ValidateEmail(createRequest.Email)) { return Errors.Customer.IlligalEmail;  }
-        else if (!await GetIdAvailable(createRequest.Id)) { return Errors.Customer.IdAlreadyExists; }
-        else if (!await GetUsernameAvailable(createRequest.Username)) { return Errors.Customer.UsernameAlreadyExists; }
-        else if (!await GetEmailAvailable(createRequest.Email)) { return Errors.Customer.EmailAlreadyExists; }
+        else if (await _context.Customers.AnyAsync(c => c.Id == createRequest.Id)) { return Errors.Customer.IdAlreadyExists; }
+        else if (await _context.Customers.AnyAsync(c => c.Username ==  createRequest.Username)) { return Errors.Customer.UsernameAlreadyExists; }
+        else if (await _context.Customers.AnyAsync(c => c.Email.ToLower() == createRequest.Email.ToLower())) { return Errors.Customer.EmailAlreadyExists; }
 
         CreatePasswordHash(createRequest.Password, out var passwordHash, out var passwordSalt);
 
@@ -56,13 +56,13 @@ public class CustomerService : ICustomerService
 
     //Gets
     public async Task<bool> GetIdAvailable(string id) =>
-         !(ValidateId(id) || await _context.Customers.AnyAsync(c => c.Id == id));
+         !(!ValidateId(id) || await _context.Customers.AnyAsync(c => c.Id == id));
 
     public async Task<bool> GetUsernameAvailable(string username) =>
-        !(!string.IsNullOrWhiteSpace(username) || await _context.Customers.AnyAsync(c => c.Username == username));
+        !(string.IsNullOrWhiteSpace(username) || await _context.Customers.AnyAsync(c => c.Username == username));
 
     public async Task<bool> GetEmailAvailable(string email) =>
-         !(ValidateEmail(email) || await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
+         !(!ValidateEmail(email) || await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
 
     public async Task<ErrorOr<GetCustomerResponseDTO>> GetLoginCustomer(GetCustomerLoginRequestDTO loginRequest)
     {
@@ -213,11 +213,11 @@ public class CustomerService : ICustomerService
             || int.Parse(id[..2]) > 24
             || int.Parse(id[3].ToString()) > 6) { return false; }
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 9; i++)
         {
-            var num = int.Parse(id[i].ToString());
+            var num = int.Parse(id[i].ToString()) * ((i + 1) % 2 + 1);
             num = (num > 9) ? num - 9 : num;
-            sum += num * ((i + 1) % 2 + 1);
+            sum += num ;
         }
         var checkNum = ((sum / 10) + 1) * 10;
 

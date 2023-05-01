@@ -73,7 +73,6 @@ public class AccountService : IAccountService
         var account = await _context.Accounts.Include(c => c.Customer)
             .FirstOrDefaultAsync(a => a.Id == accountId);
 
-        Console.WriteLine(customerId + " " + account!.Customer.Id);
         if (account == null) { return Errors.Account.NotFound; }
         else if (account.Customer.Id != customerId) { return Errors.Account.UnauthorizedAccountAccess; }
 

@@ -9,7 +9,6 @@ public interface ICustomerService
     Task<bool> GetIdAvailable(string id);
     Task<bool> GetUsernameAvailable(string username);
     Task<bool> GetEmailAvailable(string email);
-    bool GetVaildPassword(string password);
     Task<ErrorOr<GetCustomerResponseDTO>> GetLoginCustomer(GetCustomerLoginRequestDTO loginRequest);
     Task<ErrorOr<Updated>> UpdateCustomerInformationAsync(string id, UpdateCustomerInformationRequestDTO updateRequest);
     Task<ErrorOr<Updated>> UpdateCustomerUsernameAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest);
