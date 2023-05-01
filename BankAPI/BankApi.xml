@@ -18,42 +18,42 @@
             <param></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.CreateCheckingAccount(BankAPI.DTOs.Account.CreateCheckingAccountRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.CreateCheckingAccount(BankAPI.Contracts.DTOs.Accounts.CreateCheckingAccountRequestDTO)">
             <summary>
             This Service creates a new checking account 
             </summary>
             <param name="request"></param>
             <returns> </returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.CreateSavingsAccount(BankAPI.DTOs.Account.CreateSavingsAccountRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.CreateSavingsAccount(BankAPI.Contracts.DTOs.Accounts.CreateSavingsAccountRequestDTO)">
             <summary>
             This Service creates a new savings account 
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.CreateFixedTermInvestmentAccount(BankAPI.DTOs.Account.CreateFixedTermInvestmentAccountRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.CreateFixedTermInvestmentAccount(BankAPI.Contracts.DTOs.Accounts.CreateFixedTermInvestmentAccountRequestDTO)">
             <summary>
             This Service creates a new fixed term investment account 
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.UpdateWithdrawBalance(BankAPI.DTOs.Account.UpdateWithdrawBalanceRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.UpdateWithdrawBalance(BankAPI.Contracts.DTOs.Accounts.UpdateWithdrawBalanceRequestDTO)">
             <summary>
             This Service is used to withdraw money from a an account
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.UpdateDepositBalance(BankAPI.DTOs.Account.UpdateDepositBalanceRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.UpdateDepositBalance(BankAPI.Contracts.DTOs.Accounts.UpdateDepositBalanceRequestDTO)">
             <summary>
             This Service is used to deposit money from a an account
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:BankAPI.Controllers.AccountController.UpdateTransferBalance(BankAPI.DTOs.Account.UpdateTransferBalanceRequestDTO)">
+        <member name="M:BankAPI.Controllers.AccountController.UpdateTransferBalance(BankAPI.Contracts.DTOs.Accounts.UpdateTransferBalanceRequestDTO)">
             <summary>
             This Service is used to transfer money from a an account
             </summary>

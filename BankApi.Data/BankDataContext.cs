@@ -1,8 +1,6 @@
 ﻿
 using BankAPI.Data.Model;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml;
 
 namespace BankAPI.Data;
 
@@ -26,11 +24,18 @@ public class BankDataContext : DbContext
             .HasOne(a => a.Customer)
             .WithMany(c => c.Accounts)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Time>()
+            .HasData(new Time
+            {
+                Id = 1,
+                CurrentDate = DateOnly.FromDateTime(DateTime.Now)
+            });
     }
 
 
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Account> Accounts { get; set; }
-
+    public DbSet<Time> Time { get; set; }
 
 }

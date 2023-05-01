@@ -1,5 +1,5 @@
 ﻿using static BankAPI.ServiceErrors.Errors;
-using BankAPI.DTOs.Customers;
+using BankAPI.Contracts.DTOs.Customers;
 using BankAPI.ServiceErrors;
 using BankAPI.Data;
 using ErrorOr;
@@ -65,14 +65,14 @@ public class CustomerService : ICustomerService
          !(ValidateEmail(email) || await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
 
     public bool GetVaildPassword(string password) =>
-        ValidatePassword(password); 
+        !ValidatePassword(password); 
 
     public async Task<ErrorOr<GetCustomerResponseDTO>> GetLoginCustomer(GetCustomerLoginRequestDTO loginRequest)
     {
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Username == loginRequest.Username);
 
         if (customer == null
-            || VerifyPasswordHash(loginRequest.Password, customer.PasswordHash, customer.PasswordSalt))
+            || !VerifyPasswordHash(loginRequest.Password, customer.PasswordHash, customer.PasswordSalt))
         {
             return Errors.Customer.InvalidLogin;
         }
@@ -91,11 +91,11 @@ public class CustomerService : ICustomerService
         customer.LastName = updateRequest.LastName;
         customer.FirstName = updateRequest.FirstName;
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();  
 
         return Result.Updated;
     }
-
+      
     public async Task<ErrorOr<Updated>> UpdateCustomerUsernameAsync(string id, UpdateCustomerUsernameRequestDTO updateRequest)
     {
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
@@ -127,12 +127,12 @@ public class CustomerService : ICustomerService
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
 
         if (customer == null) { return Errors.Customer.NotFound; }
-        else if (VerifyPasswordHash(updateRequest.OldPassword, customer.PasswordHash, customer.PasswordSalt)) { return Errors.Customer.InvalidPassword; }
-        else if (ValidatePassword(updateRequest.NewPassword)) { return Errors.Customer.IlligalPassword; }
+        else if (!VerifyPasswordHash(updateRequest.OldPassword, customer.PasswordHash, customer.PasswordSalt)) { return Errors.Customer.InvalidPassword; }
+        else if (!ValidatePassword(updateRequest.NewPassword)) { return Errors.Customer.IlligalPassword; }
 
         CreatePasswordHash(updateRequest.NewPassword, out var passwordHash, out var passwordSalt);
 
-        customer.PasswordHash = passwordHash;
+        customer.PasswordHash = passwordHash; 
         customer.PasswordSalt = passwordSalt;
 
         await _context.SaveChangesAsync();
@@ -170,7 +170,10 @@ public class CustomerService : ICustomerService
 
         var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
-        return passwordHash.Equals(computedHash);
+        Console.WriteLine("Is Valid Password: " + passwordHash.SequenceEqual(computedHash));
+        Console.WriteLine("passwordHash: " + ConvertByteArrayToString(passwordHash) + " / computedHash: " + ConvertByteArrayToString(computedHash));
+
+        return passwordHash.SequenceEqual(computedHash);
     }
 
     private string CreateToken(Data.Model.Customer customer)
@@ -181,9 +184,7 @@ public class CustomerService : ICustomerService
             new Claim(ClaimTypes.Name, customer.Username)
         };
 
-        var appSettingsToken = _configuration.GetSection("AppSettings:Token").Value;
-        if (appSettingsToken == null) { throw new ArgumentNullException(nameof(appSettingsToken)); }
-
+        string appSettingsToken = _configuration.GetSection("AppSettings:Token").Value ?? throw new NullReferenceException("invalid token");
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(appSettingsToken));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -231,6 +232,16 @@ public class CustomerService : ICustomerService
         string pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"; 
         if (string.IsNullOrWhiteSpace(email)) { return false;}
         return Regex.IsMatch(email, pattern);
+    }
+
+    private static string ConvertByteArrayToString(byte[] bytes)
+    {
+        string finalString = "";
+        foreach (byte b in bytes)
+        {
+            finalString += b;
+        }
+        return finalString;
     }
 
     #endregion

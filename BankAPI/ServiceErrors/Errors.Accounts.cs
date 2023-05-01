@@ -1,4 +1,4 @@
-﻿using BankAPI.DTOs.Account;
+﻿using BankAPI.Contracts.DTOs.Customers;
 using ErrorOr;
 
 namespace BankAPI.ServiceErrors;
@@ -19,6 +19,11 @@ public partial class Errors
         public static Error InvalidAction => Error.Validation(
             code: "Account.InvalidAction",
             description: "This account does not support this action");
+
+        public static Error InvalidTargetAccount => Error.Validation(
+            code: "Account.InvalidTarget",
+            description: "Can't transfer to the same account you're transferring from"
+            );
 
         public static Error UnauthorizedAccountAccess => Error.Custom(
             type: StatusCodes.Status403Forbidden,

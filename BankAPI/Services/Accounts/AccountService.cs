@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using BankAPI.DTOs.Account;
 using BankAPI.Data.Model;
 using BankAPI.ServiceErrors;
-using BankAPI.Services.Customers;
 using ErrorOr;
 using BankAPI.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
+using BankAPI.Contracts.DTOs.Accounts;
 
 namespace BankAPI.Services.Accounts;
 
@@ -75,8 +73,9 @@ public class AccountService : IAccountService
         var account = await _context.Accounts.Include(c => c.Customer)
             .FirstOrDefaultAsync(a => a.Id == accountId);
 
+        Console.WriteLine(customerId + " " + account!.Customer.Id);
         if (account == null) { return Errors.Account.NotFound; }
-        else if (account.Customer.Id == customerId) { return Errors.Account.UnauthorizedAccountAccess; }
+        else if (account.Customer.Id != customerId) { return Errors.Account.UnauthorizedAccountAccess; }
 
 
         return _mapper.Map<GetAccountResponseDTO>(account);
@@ -100,7 +99,7 @@ public class AccountService : IAccountService
         if (account == null) { return Errors.Account.NotFound; }
         else if (account.AccountType == AccountType.FixedTermInvestment) { return Errors.Account.InvalidAction; }
         else if (request.DepositAmount < 0) { return Errors.Account.AmountValidation; }
-        else if (account.Customer.Id == customerId) { return Errors.Account.UnauthorizedAccountAccess; }
+        else if (account.Customer.Id != customerId) { return Errors.Account.UnauthorizedAccountAccess; }
 
         account.Balance += request.DepositAmount;
 
@@ -115,11 +114,12 @@ public class AccountService : IAccountService
         var targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId);
 
         if (account == null || targetAccount == null) { return Errors.Account.NotFound; }
+        else if (request.Id == request.TargetAccountId) { return Errors.Account.InvalidTargetAccount; }
         else if (account.AccountType == AccountType.FixedTermInvestment ||
             targetAccount.AccountType == AccountType.FixedTermInvestment) { return Errors.Account.InvalidAction; }
         else if (request.TransferAmount < 0) { return Errors.Account.AmountValidation; }
         else if (account.Balance < request.TransferAmount) { return Errors.Account.InsufficientFounds; }
-        else if (account.Customer.Id == customerId) { return Errors.Account.UnauthorizedAccountAccess; }
+        else if (account.Customer.Id != customerId) { return Errors.Account.UnauthorizedAccountAccess; }
 
         targetAccount.Balance += request.TransferAmount;
         account.Balance -= request.TransferAmount;
@@ -137,7 +137,7 @@ public class AccountService : IAccountService
         else if (account.AccountType == AccountType.FixedTermInvestment) { return Errors.Account.InvalidAction; }
         else if (request.WithdawAmount < 0) { return Errors.Account.AmountValidation; }
         else if (account.Balance < request.WithdawAmount) { return Errors.Account.InsufficientFounds; }
-        else if (account.Customer.Id == customerId) { return Errors.Account.UnauthorizedAccountAccess; }
+        else if (account.Customer.Id != customerId) { return Errors.Account.UnauthorizedAccountAccess; }
 
         account.Balance -= request.WithdawAmount;
         _context.SaveChanges();
@@ -167,7 +167,7 @@ public class AccountService : IAccountService
         else if (balance < 0) { return Errors.Account.AmountValidation; }
         newAccount.Balance = balance;
         newAccount.Customer = customer;
-        newAccount.CraetedDate = DateOnly.FromDateTime(DateTime.Now);
+        newAccount.CraetedDate = (await _context.Time.FirstOrDefaultAsync())!.CurrentDate;
         return newAccount;
     }
     #endregion

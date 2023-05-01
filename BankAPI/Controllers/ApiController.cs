@@ -14,6 +14,8 @@ namespace BankAPI.Controllers
         {
             var firstError = errors[0];
 
+            if( firstError.NumericType == StatusCodes.Status403Forbidden ) { return Problem (statusCode: StatusCodes.Status403Forbidden, title: firstError.Description); }
+
             var statusCode = firstError.Type switch
             {
                 ErrorType.NotFound => StatusCodes.Status404NotFound,

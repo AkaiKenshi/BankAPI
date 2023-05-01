@@ -1,5 +1,5 @@
-﻿using BankAPI.Data.Model;
-using BankAPI.DTOs.Customers;
+﻿using BankAPI.Contracts.DTOs.Customers;
+using BankAPI.Data.Model;
 using BankAPI.Services.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
