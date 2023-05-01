@@ -64,9 +64,6 @@ public class CustomerService : ICustomerService
     public async Task<bool> GetEmailAvailable(string email) =>
          !(ValidateEmail(email) || await _context.Customers.AnyAsync(c => c.Email.ToLower() == email.ToLower()));
 
-    public bool GetVaildPassword(string password) =>
-        !ValidatePassword(password); 
-
     public async Task<ErrorOr<GetCustomerResponseDTO>> GetLoginCustomer(GetCustomerLoginRequestDTO loginRequest)
     {
         var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Username == loginRequest.Username);
