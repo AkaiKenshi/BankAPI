@@ -2,7 +2,6 @@
 using BankAPI.Data.Model;
 using BankAPI.ServiceErrors;
 using ErrorOr;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankAPI.Services.Time
@@ -20,6 +19,7 @@ namespace BankAPI.Services.Time
             var time = await _context.Time.FirstOrDefaultAsync();
             var accounts = await _context.Accounts.ToListAsync();
 
+            if (timeMonths <= 0 ) { return Errors.Time.InvalidTime; }
             if (time == null) { return Errors.Time.NotFound; }
             else if (accounts == null) { return Errors.Account.NotFound; }
 
