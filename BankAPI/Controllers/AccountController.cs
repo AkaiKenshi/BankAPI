@@ -22,6 +22,13 @@ public class AccountController : ApiController
 
 
     #region get
+    /// <summary>
+    /// this service checks if an account exists 
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <returns></returns>
+    [HttpGet("checkAccountExists/{accountId}")]
+    public async Task<IActionResult> GetCheckIfAccountExits(string accountId) => Ok(await _accountService.GetAccountExists(accountId));
 
     /// <summary>
     /// This service returns the account from the given id

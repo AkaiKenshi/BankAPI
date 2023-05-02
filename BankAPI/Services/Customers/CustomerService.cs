@@ -1,12 +1,10 @@
-﻿using static BankAPI.ServiceErrors.Errors;
-using BankAPI.Contracts.DTOs.Customers;
+﻿using BankAPI.Contracts.DTOs.Customers;
 using BankAPI.ServiceErrors;
 using BankAPI.Data;
 using ErrorOr;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.RegularExpressions;

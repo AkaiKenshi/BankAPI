@@ -5,6 +5,7 @@ using ErrorOr;
 using BankAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using BankAPI.Contracts.DTOs.Accounts;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BankAPI.Services.Accounts;
 
@@ -68,6 +69,7 @@ public class AccountService : IAccountService
 
 
     //Get
+    public async Task<bool> GetAccountExists(string accountId) => await _context.Accounts.AnyAsync(a => a.Id == accountId);
     public async Task<ErrorOr<GetAccountResponseDTO>> GetAccountAsync(string accountId, string customerId)
     {
         var account = await _context.Accounts.Include(c => c.Customer)
