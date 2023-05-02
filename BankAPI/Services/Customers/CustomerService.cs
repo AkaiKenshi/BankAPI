@@ -164,10 +164,6 @@ public class CustomerService : ICustomerService
         using var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt);
 
         var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
-        Console.WriteLine("Is Valid Password: " + passwordHash.SequenceEqual(computedHash));
-        Console.WriteLine("passwordHash: " + ConvertByteArrayToString(passwordHash) + " / computedHash: " + ConvertByteArrayToString(computedHash));
-
         return passwordHash.SequenceEqual(computedHash);
     }
 
