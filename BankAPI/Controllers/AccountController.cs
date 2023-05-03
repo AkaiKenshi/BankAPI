@@ -28,6 +28,8 @@ public class AccountController : ApiController
     /// <param name="accountId"></param>
     /// <returns></returns>
     [HttpGet("checkAccountExists/{accountId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCheckIfAccountExits(string accountId) => Ok(await _accountService.GetAccountExists(accountId));
 
     /// <summary>

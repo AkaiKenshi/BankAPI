@@ -4,6 +4,13 @@
         <name>BankAPI</name>
     </assembly>
     <members>
+        <member name="M:BankAPI.Controllers.AccountController.GetCheckIfAccountExits(System.String)">
+            <summary>
+            this service checks if an account exists 
+            </summary>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
         <member name="M:BankAPI.Controllers.AccountController.GetAccount(System.String)">
             <summary>
             This service returns the account from the given id
